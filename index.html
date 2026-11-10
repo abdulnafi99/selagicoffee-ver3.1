@@ -13,8 +13,8 @@
     <meta name="apple-mobile-web-app-title" content="Selagi Coffee">
     <meta name="application-name" content="Selagi Coffee">
     <meta name="msapplication-TileColor" content="#FFFFFF">
-    <link rel="apple-touch-icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKLXHQ9Uk_uKM8hsNqBL9w0VCncN5jrqIvnw&s">
-    <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKLXHQ9Uk_uKM8hsNqBL9w0VCncN5jrqIvnw&s">
+    <link rel="apple-touch-icon" href="logo.jpg">
+    <link rel="icon" type="image/jpeg" href="logo.jpg">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -867,7 +867,7 @@
     <!-- ⭐ SPLASH SCREEN -->
     <div id="splashScreen">
         <div class="splash-logo-wrap">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKLXHQ9Uk_uKM8hsNqBL9w0VCncN5jrqIvnw&s" alt="Selagi Coffee Logo" class="splash-logo">
+            <img src="logo.jpg" alt="Selagi Coffee Logo" class="splash-logo">
         </div>
         <h1 class="splash-title">Selagi Coffee</h1>
         <p class="splash-sub">Loyalty Reward & Tiers</p>
@@ -878,7 +878,7 @@
     <div class="qr-fullscreen-overlay" id="qrFullscreenOverlay" onclick="closeQRFullscreen(event)">
         <button class="qr-fs-close" onclick="closeQRFullscreen(event)" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button>
         <div class="qr-fs-brand">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKLXHQ9Uk_uKM8hsNqBL9w0VCncN5jrqIvnw&s" alt="Selagi Coffee">
+            <img src="logo.jpg" alt="Selagi Coffee">
             <strong>Selagi Coffee</strong>
         </div>
         <div class="qr-fs-hint"><i class="fa-solid fa-qrcode"></i> Tunjukkan skrin ini kepada Cashier untuk scan</div>
@@ -912,7 +912,7 @@
             <div class="hero-media" aria-hidden="true"></div>
             <div class="steam" aria-hidden="true"><span></span><span></span><span></span></div>
             <div class="hero-content">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKLXHQ9Uk_uKM8hsNqBL9w0VCncN5jrqIvnw&s" alt="Selagi Coffee Logo" class="header-logo">
+                <img src="logo.jpg" alt="Selagi Coffee Logo" class="header-logo">
                 <h1>Loyalty Reward & Tiers</h1>
                 <h2 class="hero-title" data-i18n="heroTitle">Brew<br>Beyond<br>Ordinary</h2>
                 <p class="hero-sub" data-i18n="heroSub">Kopi pilihan, pengalaman eksklusif, ganjaran tanpa henti.</p>
@@ -1466,7 +1466,7 @@
     </div>
 
     <div class="pwa-install-banner" id="pwaInstallBanner">
-        <img class="pwa-banner-icon" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKLXHQ9Uk_uKM8hsNqBL9w0VCncN5jrqIvnw&s" alt="Selagi Coffee">
+        <img class="pwa-banner-icon" src="logo.jpg" alt="Selagi Coffee">
         <div class="pwa-banner-text">
             <strong>Selagi Coffee</strong>
             <span id="pwaBannerSub">Pasang di skrin utama untuk akses pantas</span>
@@ -1511,7 +1511,7 @@
         var BG_COLOR = '#FFFFFF';
         var DISMISS_KEY = 'selagi_pwa_banner_dismissed';
 
-        var LOGO_URL = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKLXHQ9Uk_uKM8hsNqBL9w0VCncN5jrqIvnw&s";
+        var LOGO_URL = new URL('logo.jpg', location.href).href;
 
         function rasterize(size, paddingRatio) {
             return new Promise(function (resolve) {
@@ -1582,18 +1582,18 @@
         }
 
         function initManifest() {
-            injectManifest([{ src: LOGO_URL, sizes: 'any', type: 'image/png', purpose: 'any' }]);
+            injectManifest([{ src: LOGO_URL, sizes: '225x225', type: 'image/jpeg', purpose: 'any' }]);
             Promise.all([rasterize(192, 0.08), rasterize(512, 0.08), rasterize(512, 0.22)]).then(function (r) {
                 var png192 = r[0], png512 = r[1], mask512 = r[2];
                 if (!png192 && !png512 && !mask512) {
-                    injectManifest([{ src: LOGO_URL, sizes: '512x512', type: 'image/png', purpose: 'any' }]);
+                    injectManifest([{ src: LOGO_URL, sizes: '225x225', type: 'image/jpeg', purpose: 'any' }]);
                     return;
                 }
                 var icons = [];
                 if (png192) icons.push({ src: png192, sizes: '192x192', type: 'image/png', purpose: 'any' });
                 if (png512) icons.push({ src: png512, sizes: '512x512', type: 'image/png', purpose: 'any' });
                 if (mask512) icons.push({ src: mask512, sizes: '512x512', type: 'image/png', purpose: 'maskable' });
-                icons.push({ src: LOGO_URL, sizes: '512x512', type: 'image/png', purpose: 'any' });
+                icons.push({ src: LOGO_URL, sizes: '225x225', type: 'image/jpeg', purpose: 'any' });
                 injectManifest(icons);
                 setIconLinks(png192 || png512);
             }).catch(function () {});
@@ -3338,7 +3338,7 @@
     };
 
     const VAPID_KEY = "BFpPcfdJSblmoF0592gPRSow2CfPuL46fXIYbncY0VkNlHRWjmYgIZQAKIEK1cMRtuBPcPQmM7im_XwFliezLg4";
-    const LOGO = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKLXHQ9Uk_uKM8hsNqBL9w0VCncN5jrqIvnw&s";
+    const LOGO = new URL('logo.jpg', location.href).href;
     const SW_URL = "./firebase-messaging-sw.js";
     const SW_SCOPE = "./firebase-cloud-messaging-push-scope";
     const TOKEN_KEY = "selagi_fcm_token";
