@@ -18,7 +18,7 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-const ICON_URL = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKNTcswI0MKvgwch0V6Lal3qR08ozQYkBACiB7xYPitnVeS5yWka1j3Zg&s=10';
+const ICON_URL = new URL('logo.jpg', self.location.href).href;
 
 // ============================================================
 // NOTIFIKASI BACKGROUND (bila app TERTUTUP / di belakang)
