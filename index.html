@@ -706,7 +706,7 @@
         .base64-info { display: block; font-size: 0.6rem; font-weight: 600; color: var(--caramel-2); margin-top: 8px; text-align: left; line-height: 1.4; word-break: break-word; }
 
         /* PWA */
-        .pwa-install-banner { position: fixed; left: 50%; bottom: calc(14px + var(--safe-bottom)); transform: translateX(-50%) translateY(180%); width: calc(100% - 24px); max-width: 410px; background: rgba(255,255,255,0.94); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid var(--line-strong); border-radius: 22px; padding: 10px 12px; display: flex; align-items: center; gap: 10px; z-index: 950; box-shadow: 0 18px 40px rgba(16,52,102,0.21); opacity: 0; visibility: hidden; transition: transform 0.6s var(--spring), opacity 0.35s ease, visibility 0.35s ease; }
+        .pwa-install-banner { position: fixed; left: 50%; top: calc(12px + var(--safe-top)); transform: translateX(-50%) translateY(-170%); width: calc(100% - 24px); max-width: 410px; background: rgba(255,255,255,0.94); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid var(--line-strong); border-radius: 22px; padding: 10px 12px; display: flex; align-items: center; gap: 10px; z-index: 4400; box-shadow: 0 18px 40px rgba(16,52,102,0.21); opacity: 0; visibility: hidden; transition: transform 0.6s var(--spring), opacity 0.35s ease, visibility 0.35s ease; }
         .pwa-install-banner.show { transform: translateX(-50%) translateY(0); opacity: 1; visibility: visible; }
         .pwa-install-banner .pwa-banner-icon { width: 40px; height: 40px; border-radius: 12px; border: 1px solid var(--line-strong); object-fit: cover; flex-shrink: 0; background: var(--surface); }
         .pwa-install-banner .pwa-banner-text { flex: 1; text-align: left; min-width: 0; }
@@ -772,6 +772,64 @@
         ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 10px; }
+
+        /* ============================================================
+           📲 INSTALL BANNER extras
+           ============================================================ */
+        .pwa-install-banner { overflow: hidden; }
+        .pwa-install-banner::after { content: ''; position: absolute; top: 0; left: -60%; width: 40%; height: 100%; background: linear-gradient(90deg, transparent, rgba(31,111,209,0.10), transparent); transform: skewX(-20deg); animation: btnSheen 5s ease-in-out infinite; pointer-events: none; }
+        .pwa-install-banner .pwa-banner-icon { animation: pwaIconBob 2.8s ease-in-out infinite; }
+        @keyframes pwaIconBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+        .pwa-install-banner .pwa-banner-perks { display: flex; gap: 8px; margin-top: 3px; font-size: 0.52rem; font-weight: 700; color: var(--caramel-2); white-space: nowrap; overflow: hidden; }
+        body.tour-active .pwa-install-banner { display: none; }
+
+        /* ============================================================
+           🧭 APP GUIDE — spotlight tour
+           ============================================================ */
+        .tour-overlay { position: fixed; inset: 0; z-index: 4800; opacity: 0; visibility: hidden; transition: opacity 0.35s var(--ease), visibility 0.35s ease; }
+        .tour-overlay.active { opacity: 1; visibility: visible; }
+        .tour-spot { position: fixed; top: 50%; left: 50%; width: 0; height: 0; border-radius: 22px; box-shadow: 0 0 0 9999px rgba(5, 20, 42, 0.66); pointer-events: none; transition: top 0.5s var(--ease), left 0.5s var(--ease), width 0.5s var(--ease), height 0.5s var(--ease), border-radius 0.5s var(--ease); }
+        .tour-spot::after { content: ''; position: absolute; inset: -5px; border-radius: inherit; border: 2px solid rgba(124, 194, 244, 0.95); animation: tourPulse 1.8s ease-out infinite; }
+        .tour-spot.no-target::after { display: none; }
+        @keyframes tourPulse { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.12); opacity: 0; } }
+        .tour-card { position: fixed; top: 50%; left: 50%; width: min(330px, calc(100vw - 24px)); background: #FFFFFF; border: 1px solid var(--line); border-radius: 22px; padding: 18px 18px 14px; box-shadow: 0 24px 60px rgba(5, 20, 42, 0.35); transition: top 0.5s var(--ease), left 0.5s var(--ease); }
+        .tour-card.pop { animation: tourCardIn 0.5s var(--spring); }
+        @keyframes tourCardIn { from { opacity: 0; transform: scale(0.92) translateY(8px); } to { opacity: 1; transform: none; } }
+        .tour-card .tc-arrow { position: absolute; width: 16px; height: 16px; background: #FFFFFF; border: 1px solid var(--line); transform: rotate(45deg); display: none; }
+        .tour-card .tc-arrow.top { display: block; top: -9px; border-right: none; border-bottom: none; }
+        .tour-card .tc-arrow.bottom { display: block; bottom: -9px; border-left: none; border-top: none; }
+        .tour-card .tc-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .tour-card .tc-icon { width: 38px; height: 38px; border-radius: 50%; background: var(--caramel-soft); color: var(--caramel-2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.9rem; }
+        .tour-card .tc-icon img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .tour-card .tc-step { font-size: 0.56rem; font-weight: 800; letter-spacing: 1.4px; color: var(--caramel-2); text-transform: uppercase; }
+        .tour-card h4 { font-family: var(--font-display); font-weight: 600; font-size: 1.35rem; color: var(--cream); line-height: 1.1; }
+        .tour-card p { font-size: 0.74rem; color: var(--text-muted); line-height: 1.6; font-weight: 500; }
+        .tour-card p b { color: var(--cream); }
+        .tour-card .tc-dots { display: flex; gap: 5px; margin: 14px 0 12px; }
+        .tour-card .tc-dot { width: 6px; height: 6px; border-radius: var(--radius-pill); background: var(--surface-3); transition: all 0.4s var(--ease); }
+        .tour-card .tc-dot.done { background: rgba(31,111,209,0.45); }
+        .tour-card .tc-dot.active { width: 18px; background: var(--caramel); }
+        .tour-card .tc-actions { display: flex; align-items: center; gap: 8px; }
+        .tour-card .tc-skip { background: none; border: none; color: var(--text-soft); font-size: 0.68rem; font-weight: 700; cursor: pointer; padding: 8px 4px; margin-right: auto; }
+        .tour-card .tc-skip:hover { color: var(--text-muted); }
+        .tour-card .tc-btn { height: 40px; padding: 0 16px; border-radius: var(--radius-pill); font-size: 0.72rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: transform 0.2s var(--ease), filter 0.2s ease; }
+        .tour-card .tc-btn:active { transform: scale(0.95); }
+        .tour-card .tc-back { background: transparent; border: 1px solid var(--line-strong); color: var(--cream-2); }
+        .tour-card .tc-next { background: var(--caramel-gradient); border: none; color: #FFFFFF; box-shadow: var(--shadow-accent); }
+        .tour-card .tc-next:hover { filter: brightness(1.06); }
+        .tour-card .tc-install-perks { display: grid; gap: 6px; margin-top: 10px; }
+        .tour-card .tc-install-perks span { font-size: 0.68rem; color: var(--cream-2); font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .tour-card .tc-install-perks i { color: var(--caramel); width: 16px; text-align: center; }
+
+        /* profile tools */
+        .app-tools { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+        .app-tool-btn { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 14px; border-radius: var(--radius-card); border: 1px solid var(--line); background: var(--surface); box-shadow: 0 6px 20px rgba(16,52,102,0.06); cursor: pointer; text-align: left; transition: transform 0.3s var(--ease), border-color 0.3s ease; }
+        .app-tool-btn:hover { border-color: var(--line-accent); transform: translateY(-2px); }
+        .app-tool-btn:active { transform: scale(0.97); }
+        .app-tool-btn i { width: 36px; height: 36px; border-radius: 50%; background: var(--caramel-soft); color: var(--caramel-2); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; }
+        .app-tool-btn strong { font-size: 0.76rem; color: var(--cream); font-weight: 800; }
+        .app-tool-btn span { font-size: 0.6rem; color: var(--text-muted); font-weight: 600; line-height: 1.4; }
+        .app-tool-btn.installed { opacity: 0.6; pointer-events: none; }
 
         /* ============================================================
            📱 RESPONSIVE + SAFE AREAS (phone · tablet · desktop)
@@ -1074,7 +1132,8 @@
                                 <button type="button" class="chip active" onclick="switchBottomTab('home')"><i class="fa-solid fa-house"></i> Home</button>
                                 <button type="button" class="chip" onclick="switchBottomTab('cap-point')"><i class="fa-solid fa-stamp"></i> Cap & Point</button>
                                 <button type="button" class="chip" onclick="switchBottomTab('reward')"><i class="fa-solid fa-gift"></i> Reward</button>
-                                <button type="button" class="chip" onclick="openQRFullscreen()"><i class="fa-solid fa-qrcode"></i> QR</button>
+                                <button type="button" class="chip" id="homeQrChip" onclick="openQRFullscreen()"><i class="fa-solid fa-qrcode"></i> QR</button>
+                                <button type="button" class="chip" id="homeGuideChip" onclick="startAppTour(true)"><i class="fa-regular fa-circle-question"></i> Panduan</button>
                             </div>
 
                             <div class="info-terkini-section" id="infoTerkiniSection">
@@ -1275,6 +1334,18 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="app-tools">
+                                <button type="button" class="app-tool-btn" onclick="startAppTour(true)">
+                                    <i class="fa-regular fa-circle-question"></i>
+                                    <strong>Panduan App</strong>
+                                    <span>Lihat semula langkah penting</span>
+                                </button>
+                                <button type="button" class="app-tool-btn" id="profileInstallBtn" onclick="installPWA()">
+                                    <i class="fa-solid fa-mobile-screen-button"></i>
+                                    <strong id="profileInstallTitle">Pasang App</strong>
+                                    <span id="profileInstallSub">Tambah ke skrin utama telefon</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -1465,11 +1536,35 @@
         </div>
     </div>
 
+    <!-- 🧭 APP GUIDE (spotlight tour) -->
+    <div class="tour-overlay" id="tourOverlay" aria-live="polite">
+        <div class="tour-spot" id="tourSpot"></div>
+        <div class="tour-card" id="tourCard" role="dialog" aria-modal="true" aria-labelledby="tourTitle">
+            <span class="tc-arrow" id="tourArrow"></span>
+            <div class="tc-head">
+                <span class="tc-icon" id="tourIcon"><i class="fa-solid fa-mug-hot"></i></span>
+                <div>
+                    <div class="tc-step" id="tourStepLabel">Langkah 1</div>
+                    <h4 id="tourTitle">Selamat Datang</h4>
+                </div>
+            </div>
+            <p id="tourText"></p>
+            <div id="tourExtra"></div>
+            <div class="tc-dots" id="tourDots"></div>
+            <div class="tc-actions">
+                <button type="button" class="tc-skip" id="tourSkip">Langkau</button>
+                <button type="button" class="tc-btn tc-back" id="tourBack"><i class="fa-solid fa-arrow-left"></i></button>
+                <button type="button" class="tc-btn tc-next" id="tourNext">Seterusnya <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+        </div>
+    </div>
+
     <div class="pwa-install-banner" id="pwaInstallBanner">
         <img class="pwa-banner-icon" src="logo.jpg" alt="Selagi Coffee">
         <div class="pwa-banner-text">
-            <strong>Selagi Coffee</strong>
+            <strong>📲 Pasang Selagi Coffee</strong>
             <span id="pwaBannerSub">Pasang di skrin utama untuk akses pantas</span>
+            <div class="pwa-banner-perks"><span>⚡ Lebih pantas</span><span>🔔 Notifikasi</span><span>📵 Tanpa App Store</span></div>
         </div>
         <button class="pwa-install-btn" onclick="installPWA()"><i class="fa-solid fa-download"></i> Pasang</button>
         <button class="pwa-dismiss-btn" onclick="dismissInstallBanner()" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button>
@@ -1618,21 +1713,59 @@
 
         var banner = null, subLabel = null;
         function getBanner() { if (!banner) banner = document.getElementById('pwaInstallBanner'); if (!subLabel) subLabel = document.getElementById('pwaBannerSub'); return banner; }
-        function isDismissed() { try { return localStorage.getItem(DISMISS_KEY) === '1'; } catch (e) { return false; } }
-        function showBanner() { var el = getBanner(); if (!el || isStandaloneMode() || isDismissed()) return; setTimeout(function () { el.classList.add('show'); }, 1200); }
+        var SNOOZE_MS = 3 * 24 * 60 * 60 * 1000;   /* "Nanti" hides the banner for 3 days */
+        var INSTALLED_KEY = 'selagi_pwa_installed';
+        function isDismissed() {
+            try {
+                if (localStorage.getItem(INSTALLED_KEY) === '1') return true;
+                var t = parseInt(localStorage.getItem(DISMISS_KEY) || '', 10);
+                return !isNaN(t) && t > 1 && (Date.now() - t) < SNOOZE_MS;
+            } catch (e) { return false; }
+        }
+        var bannerTimer = null;
+        function showBanner(delay) {
+            var el = getBanner(); if (!el || isStandaloneMode() || isDismissed()) return;
+            clearTimeout(bannerTimer);
+            bannerTimer = setTimeout(function () {
+                if (document.body.classList.contains('tour-active') || isStandaloneMode() || isDismissed()) return;
+                el.classList.add('show');
+                setTimeout(function () { el.classList.remove('show'); }, 15000);
+            }, typeof delay === 'number' ? delay : 1200);
+        }
+        window.isAppInstalled = function () { return isStandaloneMode() || (function () { try { return localStorage.getItem(INSTALLED_KEY) === '1'; } catch (e) { return false; } })(); };
+        window.maybeShowInstallBanner = function (delay) { showBanner(delay); };
+        window.snoozeInstallPrompt = function () { try { localStorage.setItem(DISMISS_KEY, String(Date.now())); } catch (e) {} };
+        window.getInstallHint = function () {
+            if (isIOS) return 'Safari → butang Kongsi ⬆️ → "Tambah ke Skrin Utama"';
+            if (deferredPrompt) return 'Satu klik sahaja — tekan "Pasang Sekarang"';
+            if (isAndroid) return 'Menu ⋮ pelayar → "Install app / Tambah ke Skrin Utama"';
+            return 'Klik ikon Install ⊕ di bar alamat pelayar';
+        };
+        function syncProfileInstall() {
+            var btn = document.getElementById('profileInstallBtn');
+            if (!btn) return;
+            var done = window.isAppInstalled();
+            btn.classList.toggle('installed', done);
+            var t = document.getElementById('profileInstallTitle'), sub = document.getElementById('profileInstallSub');
+            if (t) t.textContent = done ? 'App Dipasang ✓' : 'Pasang App';
+            if (sub) sub.textContent = done ? 'Anda guna versi aplikasi' : 'Tambah ke skrin utama telefon';
+        }
         function hideBanner() { var el = getBanner(); if (el) el.classList.remove('show'); }
-        window.dismissInstallBanner = function () { hideBanner(); try { localStorage.setItem(DISMISS_KEY, '1'); } catch (e) {} };
+        window.hideInstallBanner = hideBanner;
+        window.dismissInstallBanner = function () { hideBanner(); window.snoozeInstallPrompt(); };
 
         var deferredPrompt = null;
         window.addEventListener('beforeinstallprompt', function (e) {
             e.preventDefault(); deferredPrompt = e;
             getBanner();
             if (subLabel) subLabel.textContent = 'Pasang di skrin utama — 1 klik sahaja!';
-            showBanner();
+            showBanner(2500);
         });
         window.addEventListener('appinstalled', function () {
             deferredPrompt = null; hideBanner();
-            try { localStorage.setItem(DISMISS_KEY, '1'); } catch (e) {}
+            try { localStorage.setItem(INSTALLED_KEY, '1'); } catch (e) {}
+            syncProfileInstall();
+            if (window.showNotifToast) window.showNotifToast('🎉 App Dipasang!', 'Selagi Coffee kini ada di skrin utama anda.');
         });
 
         function buildStepsHTML() {
@@ -1662,18 +1795,23 @@
             if (deferredPrompt) {
                 deferredPrompt.prompt();
                 deferredPrompt.userChoice.then(function (res) {
-                    if (res && res.outcome === 'accepted') { hideBanner(); try { localStorage.setItem(DISMISS_KEY, '1'); } catch (e) {} }
+                    if (res && res.outcome === 'accepted') { hideBanner(); try { localStorage.setItem(INSTALLED_KEY, '1'); } catch (e) {} syncProfileInstall(); }
+                    else { window.snoozeInstallPrompt(); }
                     deferredPrompt = null;
                 }).catch(function () { deferredPrompt = null; });
                 return;
             }
+            hideBanner();
             openPWAInstallModal();
         };
 
         function boot() {
             getBanner();
+            syncProfileInstall();
             if (isStandaloneMode()) { hideBanner(); return; }
-            if (isIOS) { if (subLabel) subLabel.textContent = 'Tambah ke Skrin Utama melalui Safari'; showBanner(); }
+            if (isIOS) { if (subLabel) subLabel.textContent = 'Tambah ke Skrin Utama melalui Safari'; showBanner(4000); }
+            /* Browsers without a native prompt (in-app browsers, Firefox, etc.) still get the notice → instructions modal */
+            else if (isAndroid) { setTimeout(function () { if (!deferredPrompt) { if (subLabel) subLabel.textContent = 'Tambah ke Skrin Utama untuk akses pantas'; showBanner(0); } }, 6000); }
         }
         if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
         else boot();
@@ -1702,6 +1840,194 @@
     })();
     </script>
 
+
+    <script>
+    /* ============================================================
+       🧭 APP GUIDE — point-to-point spotlight tour
+       Auto-runs once after first login; replay via "Panduan" chip or Profile.
+       ============================================================ */
+    (function () {
+        'use strict';
+        var DONE_KEY = 'selagi_tour_done_v1';
+        var steps = [], idx = 0, active = false, custName = '';
+        var overlay, spot, card, arrow;
+
+        function isEN() { var b = document.getElementById('lang-en'); return !!(b && b.classList.contains('active')); }
+        function T(ms, en) { return isEN() ? en : ms; }
+        function $(id) { return document.getElementById(id); }
+        function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+        function activeTab() { var t = document.querySelector('.tab-content.active'); return t ? t.id.replace('tab-', '') : 'home'; }
+
+        function buildSteps() {
+            var list = [
+                { tab: 'home', icon: 'logo', title: T('Selamat Datang' + (custName ? ', ' + custName : '') + '! ☕', 'Welcome' + (custName ? ', ' + custName : '') + '! ☕'),
+                  text: T('Mari kenali <b>ciri penting</b> Selagi Coffee — kurang dari 1 minit.', "Let's walk through the <b>key features</b> — under 1 minute.") },
+                { tab: 'home', target: '.member-card', icon: 'fa-id-card', title: T('Kad Ahli Anda', 'Your Member Card'),
+                  text: T('Lihat <b>jumlah point</b> dan tahap ahli. Tekan kad untuk terus ke koleksi cap.', 'See your <b>points</b> and tier. Tap the card to open your stamps.') },
+                { tab: 'home', target: '#homeQrChip', icon: 'fa-qrcode', title: T('QR Ahli', 'Member QR'),
+                  text: T('Tunjukkan QR kepada <b>cashier</b> setiap kali membeli supaya cap & point masuk ke akaun anda.', 'Show this QR to the <b>cashier</b> every purchase so stamps & points go to your account.') },
+                { tab: 'cap-point', target: '#stamps-container-cap', icon: 'fa-stamp', title: T('Kumpul 10 Cap', 'Collect 10 Stamps'),
+                  text: T('1 cap = <b>10 PTS</b>. Cap ke-5: <b>Diskaun RM3</b>. Cap ke-10: <b>1 Kopi Percuma</b>. Kad auto-reset, point kekal.', '1 stamp = <b>10 PTS</b>. 5th: <b>RM3 off</b>. 10th: <b>1 Free Coffee</b>. Card resets, points stay.') },
+                { tab: 'cap-point', target: '#claimSection', icon: 'fa-shield-halved', title: T('Tuntut Ganjaran dengan PIN', 'Claim Rewards with PIN'),
+                  text: T('Ganjaran cap ke-5 & ke-10 muncul di sini. Tekan <b>Tuntut</b> dan serahkan telefon kepada staf untuk sahkan <b>PIN</b>. Setiap ganjaran sekali tuntut sahaja.', '5th & 10th stamp rewards appear here. Tap <b>Claim</b> and hand your phone to staff to enter their <b>PIN</b>. One claim per reward.') },
+                { tab: 'cap-point', target: '.voucher-box', icon: 'fa-ticket', title: T('Kod Baucar Cap', 'Stamp Voucher Code'),
+                  text: T('Ada kod baucar? Masukkan di sini atau guna butang <b>Voucher</b> terapung untuk dapat cap & point.', 'Got a voucher code? Enter it here or use the floating <b>Voucher</b> button.') },
+                { tab: 'cap-point', target: '#fabStaffPin', icon: 'fa-key', title: T('Butang Staf', 'Staff Button'),
+                  text: T('Untuk <b>kegunaan staf sahaja</b> — staf tambah cap terus dengan PIN di kaunter.', '<b>Staff only</b> — staff add a stamp with their PIN at the counter.') },
+                { tab: 'reward', target: '#cust-redeem-grid', icon: 'fa-gift', title: T('Tebus Point', 'Redeem Points'),
+                  text: T('Tukar point dengan ganjaran. Guna <b>carian & penapis</b> untuk cari item yang boleh ditebus.', 'Swap points for rewards. Use <b>search & filters</b> to find what you can redeem.') },
+                { tab: 'reward', target: '#bottomNav', icon: 'fa-compass', title: T('Navigasi', 'Navigation'),
+                  text: T('Tukar antara <b>Home, Cap & Point, Reward</b> dan <b>Profil</b> di sini.', 'Switch between <b>Home, Stamps, Rewards</b> and <b>Profile</b> here.') },
+                { tab: 'home', target: '#notifBellBtn', icon: 'fa-bell', round: true, title: T('Aktifkan Notifikasi', 'Turn On Notifications'),
+                  text: T('Tekan loceng untuk terima <b>promosi</b>, info terkini dan makluman <b>point</b>.', 'Tap the bell to get <b>promos</b>, news and <b>points</b> alerts.') }
+            ];
+            var installed = window.isAppInstalled ? window.isAppInstalled() : false;
+            if (!installed) {
+                list.push({ tab: 'home', icon: 'fa-mobile-screen-button', install: true, title: T('Pasang Aplikasi 📲', 'Install the App 📲'),
+                    text: T('Pasang Selagi Coffee di skrin utama — buka terus macam app biasa.', 'Add Selagi Coffee to your home screen — opens like a normal app.') });
+            } else {
+                list.push({ tab: 'home', icon: 'fa-circle-check', finish: true, title: T('Siap! 🎉', 'All set! 🎉'),
+                    text: T('Anda sudah sedia. Selamat menikmati kopi & kumpul ganjaran!', "You're ready. Enjoy your coffee & rewards!") });
+            }
+            return list;
+        }
+
+        function ensureEls() {
+            overlay = $('tourOverlay'); spot = $('tourSpot'); card = $('tourCard'); arrow = $('tourArrow');
+            if (!overlay || overlay.dataset.bound) return;
+            overlay.dataset.bound = '1';
+            $('tourNext').addEventListener('click', function () { next(1); });
+            $('tourBack').addEventListener('click', function () { next(-1); });
+            $('tourSkip').addEventListener('click', function () { window.endAppTour(true); });
+            window.addEventListener('resize', function () { if (active) position(); });
+            document.addEventListener('keydown', function (e) {
+                if (!active) return;
+                if (e.key === 'Escape') window.endAppTour(true);
+                else if (e.key === 'ArrowRight') next(1);
+                else if (e.key === 'ArrowLeft') next(-1);
+            });
+        }
+
+        function targetEl(step) {
+            if (!step.target) return null;
+            var el = document.querySelector(step.target);
+            if (!el) return null;
+            var r = el.getBoundingClientRect();
+            return (r.width > 0 && r.height > 0) ? el : null;
+        }
+
+        function position() {
+            var step = steps[idx]; if (!step) return;
+            var el = targetEl(step);
+            var vw = window.innerWidth, vh = window.innerHeight, m = 12;
+            var cw = card.offsetWidth, ch = card.offsetHeight;
+            arrow.className = 'tc-arrow';
+            if (!el) {
+                spot.classList.add('no-target');
+                spot.style.top = (vh / 2) + 'px'; spot.style.left = (vw / 2) + 'px'; spot.style.width = '0px'; spot.style.height = '0px';
+                card.style.left = Math.max(m, (vw - cw) / 2) + 'px'; card.style.top = Math.max(m, (vh - ch) / 2) + 'px';
+                return;
+            }
+            spot.classList.remove('no-target');
+            var r = el.getBoundingClientRect(), pad = 8;
+            var top = Math.max(r.top, m + 4), bottom = Math.min(r.bottom, vh - m - 4);   /* clamp tall targets to the viewport */
+            var sx = r.left - pad, sy = top - pad, sw = r.width + pad * 2, sh = Math.max(bottom - top, 24) + pad * 2;
+            spot.style.left = sx + 'px'; spot.style.top = sy + 'px'; spot.style.width = sw + 'px'; spot.style.height = sh + 'px';
+            spot.style.borderRadius = step.round ? '50%' : Math.min(26, sh / 2) + 'px';
+            var below = vh - (sy + sh), above = sy, cTop, arrowCls = '';
+            if (below >= ch + 22) { cTop = sy + sh + 14; arrowCls = 'top'; }
+            else if (above >= ch + 22) { cTop = sy - ch - 14; arrowCls = 'bottom'; }
+            else { cTop = Math.max(m, vh - ch - m); }
+            var cLeft = Math.min(Math.max(m, r.left + r.width / 2 - cw / 2), vw - cw - m);
+            card.style.top = cTop + 'px'; card.style.left = cLeft + 'px';
+            if (arrowCls) {
+                arrow.classList.add(arrowCls);
+                arrow.style.left = Math.min(Math.max(18, r.left + r.width / 2 - cLeft - 8), cw - 34) + 'px';
+            }
+        }
+
+        function renderCard() {
+            var step = steps[idx];
+            var icon = $('tourIcon');
+            icon.innerHTML = step.icon === 'logo' ? '<img src="logo.jpg" alt="">' : '<i class="fa-solid ' + step.icon + '"></i>';
+            $('tourStepLabel').textContent = T('Langkah ', 'Step ') + (idx + 1) + ' / ' + steps.length;
+            $('tourTitle').textContent = step.title;
+            $('tourText').innerHTML = step.text;
+            var extra = $('tourExtra');
+            extra.innerHTML = step.install
+                ? '<div class="tc-install-perks"><span><i class="fa-solid fa-bolt"></i>' + T('Buka lebih pantas, skrin penuh', 'Faster, full-screen') + '</span><span><i class="fa-solid fa-bell"></i>' + T('Terima notifikasi promosi & point', 'Get promo & points alerts') + '</span><span><i class="fa-solid fa-circle-info"></i>' + (window.getInstallHint ? window.getInstallHint() : '') + '</span></div>'
+                : '';
+            var dots = $('tourDots'); dots.innerHTML = '';
+            for (var i = 0; i < steps.length; i++) { var d = document.createElement('span'); d.className = 'tc-dot' + (i < idx ? ' done' : (i === idx ? ' active' : '')); dots.appendChild(d); }
+            $('tourBack').style.display = idx === 0 ? 'none' : '';
+            $('tourSkip').textContent = step.install ? T('Nanti', 'Later') : T('Langkau', 'Skip');
+            $('tourSkip').style.visibility = step.finish ? 'hidden' : 'visible';
+            var nextBtn = $('tourNext');
+            if (idx === 0) nextBtn.innerHTML = T('Mula Panduan', 'Start Tour') + ' <i class="fa-solid fa-arrow-right"></i>';
+            else if (step.install) nextBtn.innerHTML = '<i class="fa-solid fa-download"></i> ' + T('Pasang Sekarang', 'Install Now');
+            else if (step.finish) nextBtn.innerHTML = T('Mula Guna', "Let's Go") + ' <i class="fa-solid fa-check"></i>';
+            else nextBtn.innerHTML = T('Seterusnya', 'Next') + ' <i class="fa-solid fa-arrow-right"></i>';
+            card.classList.remove('pop'); void card.offsetWidth; card.classList.add('pop');
+        }
+
+        async function show(dir) {
+            var step = steps[idx];
+            if (!step) return;
+            if (step.tab && activeTab() !== step.tab && window.switchBottomTab) { window.switchBottomTab(step.tab); await wait(420); }
+            var el = step.target ? document.querySelector(step.target) : null;
+            if (step.target && !targetEl(step)) {          /* skip steps whose target isn't visible */
+                var n = idx + (dir || 1);
+                if (n >= 0 && n < steps.length) { idx = n; return show(dir); }
+            }
+            if (el && el.closest('.content-area')) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); await wait(450); }
+            renderCard();
+            requestAnimationFrame(position);
+        }
+
+        function next(dir) {
+            var step = steps[idx];
+            if (dir > 0 && step && step.install) { window.endAppTour(true); setTimeout(function () { if (window.installPWA) window.installPWA(); }, 300); return; }
+            if (dir > 0 && idx >= steps.length - 1) { window.endAppTour(true); return; }
+            idx = Math.min(Math.max(0, idx + dir), steps.length - 1);
+            show(dir);
+        }
+
+        window.startAppTour = function (manual) {
+            ensureEls();
+            if (!overlay || !document.querySelector('#cust-dashboard') || document.getElementById('cust-dashboard').style.display === 'none') return;
+            steps = buildSteps(); idx = 0; active = true;
+            document.body.classList.add('tour-active');
+            if (window.hideInstallBanner) window.hideInstallBanner();
+            overlay.classList.add('active');
+            show(1);
+        };
+
+        window.endAppTour = function (markDone) {
+            if (!active) return;
+            active = false;
+            if (markDone) { try { localStorage.setItem(DONE_KEY, '1'); } catch (e) {} }
+            var step = steps[idx];
+            if (markDone && step && step.install && window.snoozeInstallPrompt) window.snoozeInstallPrompt();
+            if (overlay) overlay.classList.remove('active');
+            document.body.classList.remove('tour-active');
+            if (window.switchBottomTab && activeTab() !== 'home' && markDone) window.switchBottomTab('home');
+        };
+
+        /* First login → auto tour (after splash). Returning users → install notice. */
+        window.maybeAutoStartTour = function (name) {
+            custName = (name || '').split(' ')[0];
+            var done = false; try { done = localStorage.getItem(DONE_KEY) === '1'; } catch (e) {}
+            if (done) { if (window.maybeShowInstallBanner) window.maybeShowInstallBanner(5000); return; }
+            var tries = 0;
+            (function waitSplash() {
+                var sp = document.getElementById('splashScreen');
+                var hidden = !sp || sp.classList.contains('hide') || sp.style.display === 'none';
+                if (!hidden && tries++ < 40) { setTimeout(waitSplash, 200); return; }
+                setTimeout(function () { if (!active) window.startAppTour(false); }, 900);
+            })();
+        };
+    })();
+    </script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
@@ -2455,6 +2781,7 @@
 
             setTimeout(updateNavIndicator, 120);
             setTimeout(updateNavIndicator, 900);
+            if (!keepCurrentTab && window.maybeAutoStartTour) window.maybeAutoStartTour(name);
         }
 
         function renderStamps(containerId, currentStamps) {
@@ -2543,6 +2870,7 @@
             if (stampClaimsUnsub) { try { stampClaimsUnsub(); } catch (e) {} stampClaimsUnsub = null; stampClaimsPhone = null; }
             renderStampClaims(null);
             closeClaimPinModal();
+            if (window.endAppTour) window.endAppTour(false);
             const fab = document.getElementById('fabVoucher'); if (fab) fab.classList.remove('show');
             const fabStaffPin = document.getElementById('fabStaffPin'); if (fabStaffPin) fabStaffPin.classList.remove('show');
             const header = document.getElementById('mainHeader'); if (header) header.classList.remove('hidden');
