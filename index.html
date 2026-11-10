@@ -75,6 +75,12 @@
             --safe-right: env(safe-area-inset-right, 0px);
             --safe-bottom: env(safe-area-inset-bottom, 0px);
             --safe-left: env(safe-area-inset-left, 0px);
+            /* insets used INSIDE the app frame (zeroed on tablet/desktop where body padding already absorbs them) */
+            --app-st: var(--safe-top);
+            --app-sr: var(--safe-right);
+            --app-sb: var(--safe-bottom);
+            --app-sl: var(--safe-left);
+            --nav-h: 64px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -82,6 +88,7 @@
         button, input { font-family: inherit; }
         .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
+        html { background: var(--bg); }
         body {
             font-family: var(--font-primary);
             background: var(--bg);
@@ -135,7 +142,7 @@
         @keyframes cardAppear { from { opacity: 0; transform: translateY(24px) scale(0.98); } to { opacity: 1; transform: none; } }
 
         /* ---------- top controls ---------- */
-        .top-controls { position: absolute; top: calc(16px + var(--safe-top)); right: 16px; display: flex; align-items: center; gap: 8px; z-index: 30; }
+        .top-controls { position: absolute; top: calc(16px + var(--app-st)); right: calc(16px + var(--app-sr)); display: flex; align-items: center; gap: 8px; z-index: 30; }
         .lang-switcher { display: flex; background: var(--surface-glass); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid var(--line-strong); border-radius: var(--radius-pill); padding: 3px; gap: 2px; }
         .lang-btn { background: none; border: none; font-size: 0.62rem; font-weight: 800; color: var(--text-muted); cursor: pointer; padding: 5px 10px; border-radius: var(--radius-pill); transition: all var(--transition); letter-spacing: 0.5px; }
         .lang-btn.active { background: var(--caramel); color: var(--on-accent); }
@@ -168,8 +175,8 @@
         .steam span:nth-child(3) { left: 70%; animation-delay: 3.6s; width: 20px; }
         @keyframes steamRise { 0% { transform: translate(-50%, 20px) scaleX(0.6); opacity: 0; } 25% { opacity: 0.9; } 60% { transform: translate(-30%, -70px) scaleX(1.2) skewX(10deg); opacity: 0.55; } 100% { transform: translate(-60%, -150px) scaleX(1.6) skewX(-8deg); opacity: 0; } }
 
-        .hero-content { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding: calc(22px + var(--safe-top)) 26px 60px; }
-        .header-logo { position: absolute; top: calc(16px + var(--safe-top)); left: 22px; width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 1px solid var(--line-accent); background: var(--surface); box-shadow: 0 0 0 5px rgba(185,131,79,0.08); animation: riseIn 0.8s var(--ease) 0.1s both; }
+        .hero-content { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding: calc(22px + var(--app-st)) calc(26px + var(--app-sr)) 60px calc(26px + var(--app-sl)); }
+        .header-logo { position: absolute; top: calc(16px + var(--app-st)); left: calc(22px + var(--app-sl)); width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 1px solid var(--line-accent); background: var(--surface); box-shadow: 0 0 0 5px rgba(185,131,79,0.08); animation: riseIn 0.8s var(--ease) 0.1s both; }
         .header h1 { font-family: var(--font-primary); font-size: 0.62rem; font-weight: 800; color: var(--caramel-2); letter-spacing: 2.4px; text-transform: uppercase; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; animation: riseIn 0.8s var(--ease) 0.2s both; }
         .header h1::before { content: ''; width: 22px; height: 1px; background: var(--caramel-2); }
         .hero-title { font-family: var(--font-display); font-weight: 400; font-size: clamp(2.6rem, 11vw, 3.3rem); line-height: 0.98; color: var(--cream); letter-spacing: -0.5px; animation: riseIn 0.9s var(--ease) 0.3s both; }
@@ -182,7 +189,7 @@
         /* ============================================================
            🔐 AUTH FORM — "Join The Club" card
            ============================================================ */
-        #cust-auth-box { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; align-items: stretch; padding: 2px 18px calc(22px + var(--safe-bottom)); position: relative; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; scrollbar-width: none; }
+        #cust-auth-box { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; align-items: stretch; padding: 2px calc(18px + var(--app-sr)) calc(22px + var(--app-sb)) calc(18px + var(--app-sl)); position: relative; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; scrollbar-width: none; }
         #cust-auth-box::-webkit-scrollbar { display: none; }
         #cust-form { width: 100%; background: linear-gradient(160deg, rgba(255,255,255,0.045), rgba(255,255,255,0.01)), var(--surface-glass); backdrop-filter: blur(20px) saturate(140%); -webkit-backdrop-filter: blur(20px) saturate(140%); border-radius: var(--radius-card); padding: 22px 18px 20px; border: 1px solid var(--line-strong); box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255,255,255,0.05); animation: scaleIn 0.9s var(--ease) 0.5s both; }
         .club-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
@@ -231,14 +238,14 @@
            🏠 DASHBOARD
            ============================================================ */
         #cust-dashboard { min-height: 0; max-height: 100%; overflow: hidden; }
-        .dash-top { flex-shrink: 0; display: flex; align-items: center; gap: 10px; padding: calc(16px + var(--safe-top)) 200px 6px 20px; min-height: calc(70px + var(--safe-top)); animation: riseIn 0.6s var(--ease) both; }
+        .dash-top { flex-shrink: 0; display: flex; align-items: center; gap: 10px; padding: calc(16px + var(--app-st)) calc(200px + var(--app-sr)) 6px calc(20px + var(--app-sl)); min-height: calc(70px + var(--app-st)); animation: riseIn 0.6s var(--ease) both; }
         .dash-top-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--surface-2); border: 1px solid var(--line-accent); display: flex; align-items: center; justify-content: center; color: var(--caramel-2); font-weight: 800; font-size: 0.85rem; flex-shrink: 0; }
         .dash-top-text { min-width: 0; line-height: 1.2; }
         .dash-top-text strong { display: block; font-size: 0.74rem; font-weight: 700; color: var(--cream); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .dash-top-text span { font-size: 0.6rem; color: var(--caramel-2); font-weight: 700; letter-spacing: 0.3px; }
 
         .card-box { flex: 1; display: flex; flex-direction: column; position: relative; min-height: 0; max-height: 100%; overflow: hidden; background: transparent; }
-        .content-area { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 4px 18px 110px; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; scroll-behavior: smooth; scrollbar-width: none; }
+        .content-area { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 4px calc(18px + var(--app-sr)) calc(var(--nav-h) + 56px + var(--app-sb)) calc(18px + var(--app-sl)); -webkit-overflow-scrolling: touch; overscroll-behavior: contain; scroll-behavior: smooth; scrollbar-width: none; }
         .content-area::-webkit-scrollbar { display: none; }
 
         .tab-content { display: none; }
@@ -521,25 +528,78 @@
         /* ============================================================
            🧭 FLOATING NAV — icons + sliding caramel circle
            ============================================================ */
-        .bottom-nav { position: absolute; left: 16px; right: 16px; bottom: calc(14px + var(--safe-bottom)); z-index: 20; display: flex; align-items: center; justify-content: space-around; padding: 8px 10px; height: 66px; border-radius: var(--radius-pill); isolation: isolate; background: rgba(30, 23, 18, 0.78); backdrop-filter: blur(22px) saturate(160%); -webkit-backdrop-filter: blur(22px) saturate(160%); border: 1px solid var(--line-strong); box-shadow: 0 18px 40px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05); animation: navIn 0.8s var(--ease) 0.25s both; }
+        .bottom-nav { position: absolute; left: calc(14px + var(--app-sl)); right: calc(14px + var(--app-sr)); bottom: calc(12px + var(--app-sb)); max-width: 520px; margin: 0 auto; z-index: 20; display: flex; align-items: center; gap: 4px; padding: 7px; height: var(--nav-h); border-radius: var(--radius-pill); isolation: isolate; background: rgba(30, 23, 18, 0.82); backdrop-filter: blur(22px) saturate(160%); -webkit-backdrop-filter: blur(22px) saturate(160%); border: 1px solid var(--line-strong); box-shadow: 0 18px 40px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05); animation: navIn 0.8s var(--ease) 0.25s both; }
         @keyframes navIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: none; } }
-        .nav-indicator { position: absolute; top: 0; left: 0; width: 46px; height: 46px; border-radius: 50%; background: var(--caramel-gradient); box-shadow: 0 8px 20px rgba(185,131,79,0.45), inset 0 1px 0 rgba(255,255,255,0.3); opacity: 0; z-index: 0; pointer-events: none; will-change: transform; transition: transform 0.6s var(--spring), opacity 0.35s ease; }
-        .bottom-nav-btn { position: relative; z-index: 1; flex: 1; min-width: 0; height: 50px; border: none; background: transparent; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color 0.4s ease; }
-        .bottom-nav-btn i { font-size: 1.05rem; line-height: 1; transition: transform 0.5s var(--spring), color 0.4s ease; }
+        .nav-indicator { position: absolute; top: 0; left: 0; width: 120px; height: 50px; border-radius: var(--radius-pill); background: var(--caramel-gradient); box-shadow: 0 8px 20px rgba(185,131,79,0.42), inset 0 1px 0 rgba(255,255,255,0.3); opacity: 0; z-index: 0; pointer-events: none; will-change: transform, width; transition: transform 0.55s var(--spring), width 0.55s var(--spring), height 0.3s ease, opacity 0.3s ease; }
+        .bottom-nav-btn { position: relative; z-index: 1; flex: 1 1 0; min-width: 0; height: calc(var(--nav-h) - 14px); padding: 0 10px; border: none; border-radius: var(--radius-pill); background: transparent; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; transition: color 0.35s ease; }
+        .bottom-nav-btn i { font-size: 1.02rem; line-height: 1; flex-shrink: 0; transition: transform 0.5s var(--spring), color 0.35s ease; }
         .bottom-nav-btn:hover { color: var(--cream-2); }
         .bottom-nav-btn:active i { transform: scale(0.82); }
-        .bottom-nav-btn.active { color: var(--on-accent); }
+        .bottom-nav-btn.active { flex: 2.15 1 0; color: var(--on-accent); }
         .bottom-nav-btn.active i { animation: navIconPop 0.6s var(--spring); }
-        @keyframes navIconPop { 0% { transform: scale(0.7); } 60% { transform: scale(1.2); } 100% { transform: scale(1); } }
-        .bottom-nav-btn .nav-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
-        .bottom-nav-btn .badge-dot { display: none; }
+        @keyframes navIconPop { 0% { transform: scale(0.7); } 60% { transform: scale(1.18); } 100% { transform: scale(1); } }
+        .bottom-nav-btn .nav-label { display: none; min-width: 0; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.2px; line-height: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .bottom-nav-btn.active .nav-label { display: block; animation: navLabelIn 0.45s var(--ease) 0.1s both; }
+        @keyframes navLabelIn { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: none; } }
+        .bottom-nav-btn .badge-dot { display: none; position: absolute; top: 9px; right: calc(50% - 15px); width: 8px; height: 8px; border-radius: 50%; background: #E8735E; box-shadow: 0 0 0 2px #1E1712; }
+        .bottom-nav-btn.active .badge-dot { right: 12px; top: 8px; box-shadow: 0 0 0 2px var(--caramel); }
+        .bottom-nav-btn.has-alert .badge-dot { display: block; animation: notifBellPulse 1.8s ease-in-out infinite; }
+
+        /* ============================================================
+           🎁 STAMP CLAIMS (cap ke-5 & ke-10 — sahkan dengan PIN staf)
+           ============================================================ */
+        .claim-section { margin-top: 14px; padding: 16px; border-radius: var(--radius-card); border: 1px solid var(--line); background: linear-gradient(160deg, rgba(255,255,255,0.035), rgba(255,255,255,0.008)), var(--surface); }
+        .claim-head { display: flex; align-items: center; gap: 8px; }
+        .claim-head h4 { font-family: var(--font-display); font-weight: 500; font-size: 1.3rem; color: var(--cream); display: flex; align-items: center; gap: 8px; }
+        .claim-head h4 i { color: var(--caramel-2); font-size: 0.85rem; }
+        .claim-count { margin-left: auto; min-width: 24px; height: 24px; padding: 0 8px; border-radius: var(--radius-pill); background: var(--surface-3); color: var(--text-muted); font-size: 0.62rem; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; transition: background 0.3s ease, color 0.3s ease; }
+        .claim-count.has { background: #E8735E; color: #1B130D; animation: notifBellPulse 1.8s ease-in-out infinite; }
+        .claim-desc { font-size: 0.66rem; color: var(--text-muted); line-height: 1.55; margin: 6px 0 12px; }
+        .claim-desc i { color: var(--caramel-2); }
+        .claim-list { display: flex; flex-direction: column; gap: 8px; }
+        .claim-item { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--line); background: rgba(12,9,7,0.35); animation: riseIn 0.5s var(--ease) both; }
+        .claim-item.pending { border-color: var(--line-accent); background: linear-gradient(120deg, rgba(185,131,79,0.16), rgba(185,131,79,0.04)); }
+        .claim-item .ci-icon { width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; background: var(--surface-3); color: var(--text-muted); position: relative; }
+        .claim-item.pending .ci-icon { background: var(--caramel-gradient); color: var(--on-accent); box-shadow: 0 6px 16px rgba(185,131,79,0.35); }
+        .claim-item .ci-icon small { position: absolute; bottom: -4px; right: -4px; min-width: 18px; height: 18px; padding: 0 4px; border-radius: var(--radius-pill); background: var(--cream); color: var(--on-accent); font-size: 0.5rem; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+        .claim-item .ci-body { flex: 1; min-width: 0; }
+        .claim-item .ci-body strong { display: block; font-size: 0.78rem; font-weight: 800; color: var(--cream); }
+        .claim-item .ci-body span { display: block; font-size: 0.58rem; color: var(--text-muted); font-weight: 600; margin-top: 3px; line-height: 1.4; }
+        .claim-item .ci-btn { flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 14px; border: none; border-radius: var(--radius-pill); background: var(--caramel); color: var(--on-accent); font-size: 0.68rem; font-weight: 800; cursor: pointer; box-shadow: 0 6px 14px rgba(185,131,79,0.35); transition: transform 0.25s var(--ease), filter 0.25s ease; }
+        .claim-item .ci-btn:hover { filter: brightness(1.08); }
+        .claim-item .ci-btn:active { transform: scale(0.94); }
+        .claim-item .ci-done { flex-shrink: 0; font-size: 0.6rem; font-weight: 800; color: var(--success); display: inline-flex; align-items: center; gap: 5px; }
+        .claim-empty { font-size: 0.68rem; color: var(--text-soft); text-align: center; padding: 10px 0 4px; }
+
+        .home-claim-banner { display: none; align-items: center; gap: 12px; margin-top: 12px; padding: 12px 14px; border-radius: var(--radius-card); border: 1px solid var(--line-accent); background: linear-gradient(120deg, rgba(185,131,79,0.22), rgba(185,131,79,0.06)); cursor: pointer; transition: transform 0.35s var(--ease); }
+        .home-claim-banner.show { display: flex; }
+        .home-claim-banner:active { transform: scale(0.98); }
+        .home-claim-banner .hcb-icon { width: 38px; height: 38px; border-radius: 50%; background: var(--caramel-gradient); color: var(--on-accent); display: flex; align-items: center; justify-content: center; flex-shrink: 0; animation: arrowNudge 2.4s ease-in-out infinite; }
+        .home-claim-banner .hcb-text { flex: 1; min-width: 0; }
+        .home-claim-banner .hcb-text strong { display: block; font-size: 0.76rem; color: var(--cream); font-weight: 800; }
+        .home-claim-banner .hcb-text span { display: block; font-size: 0.6rem; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
+        .home-claim-banner > i { color: var(--caramel-2); }
+
+        .stamp-slot.claim-pending::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; border: 1.5px solid #E8735E; animation: claimRing 1.8s ease-out infinite; }
+        @keyframes claimRing { 0% { transform: scale(0.9); opacity: 1; } 100% { transform: scale(1.25); opacity: 0; } }
+
+        .claim-summary { text-align: left; border: 1px solid var(--line); border-radius: var(--radius-sm); background: rgba(12,9,7,0.4); padding: 4px 14px; margin-bottom: 14px; }
+        .claim-summary div { display: flex; justify-content: space-between; gap: 10px; padding: 9px 0; border-top: 1px solid var(--line); font-size: 0.68rem; }
+        .claim-summary div:first-child { border-top: none; }
+        .claim-summary span { color: var(--text-muted); font-weight: 600; }
+        .claim-summary b { color: var(--cream); font-weight: 800; text-align: right; }
+        #claimPinModal .modal-input-group input { font-size: 1.2rem; letter-spacing: 8px; }
+        #claimPinModal .modal-input-group input::placeholder { font-size: 0.8rem; letter-spacing: 1px; }
+        #claimPinModal.shake .modal-box { animation: pinShake 0.45s ease; }
+        @keyframes pinShake { 0%, 100% { transform: none; } 20% { transform: translateX(-8px); } 40% { transform: translateX(8px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(5px); } }
+        .history-item-points.stamp { color: var(--success); background: rgba(143,211,166,0.1); }
 
         /* ============================================================
            🎫 FABs
            ============================================================ */
-        .fab-voucher, .fab-staff-pin { position: absolute; right: 18px; z-index: 19; display: none; flex-direction: column; align-items: center; }
-        .fab-voucher { bottom: calc(96px + var(--safe-bottom)); animation: fabSlideIn 0.6s var(--spring) 0.4s both; }
-        .fab-staff-pin { bottom: calc(160px + var(--safe-bottom)); animation: fabSlideIn 0.6s var(--spring) 0.55s both; }
+        .fab-voucher, .fab-staff-pin { position: absolute; right: calc(18px + var(--app-sr)); z-index: 19; display: none; flex-direction: column; align-items: center; }
+        .fab-voucher { bottom: calc(var(--nav-h) + 30px + var(--app-sb)); animation: fabSlideIn 0.6s var(--spring) 0.4s both; }
+        .fab-staff-pin { bottom: calc(var(--nav-h) + 94px + var(--app-sb)); animation: fabSlideIn 0.6s var(--spring) 0.55s both; }
         .fab-voucher.show, .fab-staff-pin.show { display: flex; }
         @keyframes fabSlideIn { from { opacity: 0; transform: translateX(40px) scale(0.6); } to { opacity: 1; transform: none; } }
         .fab-voucher .fab-btn, .fab-staff-pin .fab-btn { width: 54px; height: 54px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-direction: column; cursor: pointer; position: relative; padding: 0; border: none; transition: transform 0.35s var(--spring); }
@@ -555,7 +615,7 @@
         /* ============================================================
            🪟 MODALS / OVERLAYS
            ============================================================ */
-        .quick-modal-overlay, .staff-pin-modal-overlay, .review-modal-overlay, .modal-overlay, .all-reviews-overlay { position: fixed; inset: 0; background: rgba(6, 4, 3, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: flex; justify-content: center; align-items: center; z-index: 1500; opacity: 0; visibility: hidden; transition: opacity 0.4s var(--ease), visibility 0.4s ease; padding: 18px; }
+        .quick-modal-overlay, .staff-pin-modal-overlay, .review-modal-overlay, .modal-overlay, .all-reviews-overlay { position: fixed; inset: 0; background: rgba(6, 4, 3, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: flex; justify-content: center; align-items: center; z-index: 1500; opacity: 0; visibility: hidden; transition: opacity 0.4s var(--ease), visibility 0.4s ease; padding: calc(18px + var(--safe-top)) calc(18px + var(--safe-right)) calc(18px + var(--safe-bottom)) calc(18px + var(--safe-left)); }
         .quick-modal-overlay.active, .staff-pin-modal-overlay.active, .review-modal-overlay.active, .modal-overlay.active, .all-reviews-overlay.active { opacity: 1; visibility: visible; }
         .quick-modal-overlay, .staff-pin-modal-overlay { z-index: 2000; }
         .staff-pin-modal-overlay { z-index: 2500; }
@@ -627,7 +687,7 @@
         .image-popup-content .popup-caption { color: var(--text-muted); font-size: 0.7rem; margin-top: 12px; text-align: center; font-weight: 600; }
 
         /* toast popup */
-        .review-popup { position: fixed; bottom: calc(24px + var(--safe-bottom)); left: 50%; transform: translateX(-50%) translateY(120px); background: rgba(38,30,24,0.92); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); color: var(--cream); padding: 12px 14px 12px 18px; border-radius: var(--radius-pill); border: 1px solid var(--line-strong); box-shadow: 0 18px 40px rgba(0,0,0,0.6); z-index: 4000; opacity: 0; visibility: hidden; transition: transform 0.55s var(--spring), opacity 0.35s ease, visibility 0.35s ease; max-width: calc(100% - 32px); font-weight: 600; display: flex; align-items: center; gap: 10px; font-size: 0.76rem; }
+        .review-popup { position: fixed; bottom: calc(100px + var(--safe-bottom)); left: 50%; transform: translateX(-50%) translateY(120px); background: rgba(38,30,24,0.92); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); color: var(--cream); padding: 12px 14px 12px 18px; border-radius: var(--radius-pill); border: 1px solid var(--line-strong); box-shadow: 0 18px 40px rgba(0,0,0,0.6); z-index: 4000; opacity: 0; visibility: hidden; transition: transform 0.55s var(--spring), opacity 0.35s ease, visibility 0.35s ease; max-width: calc(100% - 32px); font-weight: 600; display: flex; align-items: center; gap: 10px; font-size: 0.76rem; }
         .review-popup.active { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
         .review-popup .popup-icon { font-size: 1.1rem; }
         .review-popup .popup-close { background: none; border: none; color: var(--text-muted); font-size: 0.85rem; cursor: pointer; padding: 4px 6px; }
@@ -691,7 +751,7 @@
         /* QR fullscreen */
         .qr-fullscreen-overlay { position: fixed; inset: 0; background: radial-gradient(circle at 50% 40%, #2A1E16 0%, #0E0B09 70%); z-index: 5000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; opacity: 0; visibility: hidden; transition: opacity 0.45s var(--ease), visibility 0.45s ease; text-align: center; }
         .qr-fullscreen-overlay.active { opacity: 1; visibility: visible; }
-        .qr-fullscreen-overlay .qr-fs-close { position: absolute; top: calc(16px + var(--safe-top)); right: 16px; width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.06); color: var(--cream); border: 1px solid var(--line-strong); font-size: 1rem; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; transition: transform 0.4s var(--spring); }
+        .qr-fullscreen-overlay .qr-fs-close { position: absolute; top: calc(16px + var(--safe-top)); right: calc(16px + var(--safe-right)); width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.06); color: var(--cream); border: 1px solid var(--line-strong); font-size: 1rem; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; transition: transform 0.4s var(--spring); }
         .qr-fullscreen-overlay .qr-fs-close:hover { transform: rotate(90deg); }
         .qr-fullscreen-overlay .qr-fs-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
         .qr-fullscreen-overlay .qr-fs-brand img { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line-accent); object-fit: cover; background: var(--surface); }
@@ -714,8 +774,9 @@
         ::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 10px; }
 
         /* ============================================================
-           📱 RESPONSIVE — full-bleed on phones
+           📱 RESPONSIVE + SAFE AREAS (phone · tablet · desktop)
            ============================================================ */
+        /* Phones: full-bleed, app handles notch / home-indicator itself */
         @media (max-width: 480px) {
             body { padding: 0; align-items: stretch; }
             .app-card { max-width: 100%; height: 100vh; border-radius: 0; border: none; box-shadow: none; animation: none; }
@@ -728,20 +789,73 @@
             .rc-visual .rc-cup { width: 84px; height: 84px; font-size: 1.7rem; }
         }
         @media (max-width: 380px) {
+            :root { --nav-h: 60px; }
             .top-logout-btn span { display: none; }
             .top-logout-btn { width: 38px; padding: 0; }
-            .dash-top { padding-right: 160px; padding-left: 16px; }
-            .content-area { padding-left: 14px; padding-right: 14px; }
-            .hero-content { padding-left: 20px; padding-right: 20px; }
-            #cust-auth-box { padding-left: 12px; padding-right: 12px; }
+            .dash-top { padding-right: calc(160px + var(--app-sr)); padding-left: calc(16px + var(--app-sl)); }
+            .content-area { padding-left: calc(14px + var(--app-sl)); padding-right: calc(14px + var(--app-sr)); }
+            .hero-content { padding-left: calc(20px + var(--app-sl)); padding-right: calc(20px + var(--app-sr)); }
+            #cust-auth-box { padding-left: calc(12px + var(--app-sl)); padding-right: calc(12px + var(--app-sr)); }
             .stamps-grid { gap: 7px; }
-            .bottom-nav { left: 12px; right: 12px; }
+            .bottom-nav { left: calc(10px + var(--app-sl)); right: calc(10px + var(--app-sr)); padding: 6px; gap: 2px; }
+            .bottom-nav-btn { padding: 0 8px; gap: 5px; }
+            .bottom-nav-btn .nav-label { font-size: 0.64rem; }
             .lang-btn { padding: 5px 8px; }
             .rc-visual { width: 84px; }
             .rc-visual img { width: 84px; height: 84px; }
             .rc-visual .rc-cup { width: 72px; height: 72px; font-size: 1.5rem; }
+            .claim-item .ci-btn { padding: 0 11px; }
         }
-        @media (max-height: 680px) { .header { height: clamp(250px, 44%, 320px); } .hero-title { font-size: 2.4rem; } }
+        @media (max-width: 480px) and (max-height: 680px) { .header { height: clamp(250px, 44%, 320px); } .hero-title { font-size: 2.4rem; } }
+
+        /* Tablet & desktop: framed app, body padding absorbs device insets */
+        @media (min-width: 481px) {
+            :root { --app-st: 0px; --app-sr: 0px; --app-sb: 0px; --app-sl: 0px; }
+            body { padding: calc(16px + var(--safe-top)) calc(16px + var(--safe-right)) calc(16px + var(--safe-bottom)) calc(16px + var(--safe-left)); }
+        }
+        @media (min-width: 481px) and (max-width: 1024px) {
+            :root { --nav-h: 68px; }
+            .app-card { max-width: 680px; height: calc(100vh - 32px - var(--safe-top) - var(--safe-bottom)); border-radius: 36px; }
+            @supports (height: 100dvh) { .app-card { height: calc(100dvh - 32px - var(--safe-top) - var(--safe-bottom)); } }
+            .header { height: clamp(320px, 46%, 500px); }
+            .hero-content { padding-left: 40px; padding-right: 40px; padding-bottom: 72px; }
+            .hero-title { font-size: clamp(3.4rem, 8vw, 4.4rem); }
+            .hero-sub { max-width: 320px; font-size: 0.84rem; }
+            #cust-auth-box { padding-left: 32px; padding-right: 32px; }
+            #cust-form { max-width: 520px; margin: 0 auto; padding: 26px 24px; }
+            .dash-top { padding-left: 28px; padding-right: 240px; }
+            .content-area { padding-left: 28px; padding-right: 28px; }
+            .display-title { font-size: 2.6rem; }
+            .bottom-nav { max-width: 500px; bottom: 16px; }
+            .bottom-nav-btn .nav-label { font-size: 0.76rem; }
+            .bottom-nav-btn i { font-size: 1.1rem; }
+            .fab-voucher, .fab-staff-pin { right: 28px; }
+            .stamps-grid { gap: 14px; max-width: 380px; margin-left: auto; margin-right: auto; }
+            .profile-details-grid { grid-template-columns: 1fr 1fr 1fr; }
+            .profile-points-big { grid-column: span 1; }
+        }
+        @media (min-width: 640px) and (max-width: 1024px) {
+            .redeem-grid { display: grid; grid-template-columns: 1fr 1fr; }
+            .redeem-card { flex-direction: column-reverse; min-height: 0; }
+            .rc-visual { width: 100%; justify-content: flex-start; }
+            .rc-visual img { width: 100%; height: 140px; }
+            .claim-list { display: grid; grid-template-columns: 1fr 1fr; }
+        }
+        @media (min-width: 1025px) { .app-card { max-width: 430px; } }
+
+        /* Landscape phones / short screens */
+        @media (orientation: landscape) and (max-height: 520px) {
+            :root { --nav-h: 56px; }
+            .app-card { height: calc(100vh - 32px - var(--safe-top) - var(--safe-bottom)); }
+            @supports (height: 100dvh) { .app-card { height: calc(100dvh - 32px - var(--safe-top) - var(--safe-bottom)); } }
+            .header { height: 210px; }
+            .hero-title { font-size: 2rem; }
+            .hero-sub { display: none; }
+            .hero-content { padding-bottom: 52px; }
+            .greeting-block { margin-bottom: 12px; }
+            .display-title { font-size: 1.7rem; }
+            .bottom-nav { bottom: 8px; }
+        }
 
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
@@ -947,6 +1061,15 @@
                                 </div>
                             </div>
 
+                            <div class="home-claim-banner" id="homeClaimBanner" onclick="switchBottomTab('cap-point'); setTimeout(function(){ var c=document.getElementById('claimSection'); if(c) c.scrollIntoView({behavior:'smooth', block:'center'}); }, 350);">
+                                <span class="hcb-icon"><i class="fa-solid fa-gift"></i></span>
+                                <div class="hcb-text">
+                                    <strong id="homeClaimTitle">Ganjaran cap sedia dituntut!</strong>
+                                    <span>Tuntut di kaunter — staf akan sahkan dengan PIN</span>
+                                </div>
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </div>
+
                             <div class="chip-row" style="margin-top:16px;">
                                 <button type="button" class="chip active" onclick="switchBottomTab('home')"><i class="fa-solid fa-house"></i> Home</button>
                                 <button type="button" class="chip" onclick="switchBottomTab('cap-point')"><i class="fa-solid fa-stamp"></i> Cap & Point</button>
@@ -1025,6 +1148,16 @@
                                 </p>
                                 <div class="stamps-grid" id="stamps-container-cap"></div>
                                 <div class="reward-tag" id="reward-status-cap" data-i18n="tagCollectNow">Kumpul cap anda sekarang!</div>
+                            </div>
+                            <div class="claim-section" id="claimSection">
+                                <div class="claim-head">
+                                    <h4><i class="fa-solid fa-gift"></i> Tuntutan Ganjaran</h4>
+                                    <span class="claim-count" id="claimPendingCount">0</span>
+                                </div>
+                                <p class="claim-desc"><i class="fa-solid fa-shield-halved"></i> Ganjaran cap ke-5 (Diskaun RM3) &amp; ke-10 (Kopi Percuma) hanya boleh dituntut di kaunter. Serahkan telefon kepada staf untuk sahkan dengan PIN — setiap ganjaran hanya boleh dituntut <b>sekali</b>.</p>
+                                <div class="claim-list" id="claimList">
+                                    <p class="claim-empty">Kumpul 5 cap untuk buka ganjaran pertama anda ☕</p>
+                                </div>
                             </div>
                             <div class="voucher-box">
                                 <label for="voucher-code-input-cap"><i class="fa-solid fa-ticket"></i> <span data-i18n="labelVoucherCode">Masukkan Kod Baucar Cap:</span></label>
@@ -1209,6 +1342,30 @@
                 <button class="btn-modal btn-modal-confirm" id="confirmResetBtn" onclick="handleResetPassword()">Set Semula</button>
             </div>
             <span id="reset-status" class="status-hint" style="display:block; margin-top:12px; text-align:left; min-height:18px;"></span>
+        </div>
+    </div>
+
+    <!-- ✅ STAMP CLAIM — STAFF PIN VERIFICATION -->
+    <div class="modal-overlay" id="claimPinModal">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeClaimPinModal()"><i class="fa-solid fa-xmark"></i></button>
+            <div class="modal-badge-tier"><i class="fa-solid fa-shield-halved"></i> PENGESAHAN STAF</div>
+            <div class="modal-icon-circle" id="claimModalIcon"><i class="fa-solid fa-gift"></i></div>
+            <h3 class="modal-title" id="claimModalTitle">Tuntut Ganjaran</h3>
+            <p class="modal-desc" id="claimModalDesc">Serahkan telefon kepada staf. Staf perlu masukkan PIN untuk sahkan tuntutan.</p>
+            <div class="claim-summary" id="claimSummary">
+                <div><span>Ganjaran</span><b id="claimSumReward">-</b></div>
+                <div><span>Milestone</span><b id="claimSumMilestone">-</b></div>
+                <div><span>Pelanggan</span><b id="claimSumCustomer">-</b></div>
+            </div>
+            <div class="modal-input-group" id="claimPinGroup">
+                <input type="password" id="claim-pin-input" placeholder="PIN Staf" inputmode="numeric" autocomplete="off" onkeypress="if(event.key==='Enter') confirmStampClaim()">
+            </div>
+            <div class="modal-actions" id="claimActions">
+                <button class="btn-modal btn-modal-cancel" onclick="closeClaimPinModal()">Batal</button>
+                <button class="btn-modal btn-modal-confirm" id="confirmClaimBtn" onclick="confirmStampClaim()"><i class="fa-solid fa-check"></i> Sahkan &amp; Tuntut</button>
+            </div>
+            <span class="modal-status" id="claim-pin-status">🔑 Hanya staf boleh masukkan PIN</span>
         </div>
     </div>
 
@@ -1548,7 +1705,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
-        import { getDatabase, ref, set, get, child, update, onValue, remove, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+        import { getDatabase, ref, set, get, child, update, onValue, remove, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
         const firebaseConfig = {
@@ -1900,7 +2057,8 @@
                 let currentStamps = userData.stamps || 0;
                 const currentPoints = userData.points || 0;
                 if (currentStamps >= 10) {
-                    await update(userRef, { stamps: 0 }); currentStamps = 0;
+                    await ensureMilestoneClaim(currentActiveCustomerPhone, userData.cardCycle || 0, 10);
+                    await update(userRef, { stamps: 0, cardCycle: (userData.cardCycle || 0) + 1 }); currentStamps = 0;
                     updateStaffPinStatus('🔄 Kad penuh! Auto reset cap.', 'success');
                     renderCustomerDashboard({ ...userData, stamps: 0, points: currentPoints }, true);
                     setTimeout(() => closeStaffPinModal(), 1500); return;
@@ -1910,11 +2068,11 @@
                 const newPoints = currentPoints + pointsPerStamp;
                 const expDate = getExpiryDateString(userData.pointsExpiry);
                 await update(userRef, { stamps: nextStamp, points: newPoints, pointsExpiry: expDate });
+                await afterStampAdded(userRef, userData, nextStamp);
                 input.value = '';
                 if (nextStamp >= 10) {
-                    await update(userRef, { stamps: 0 });
                     updateStaffPinStatus(`✅ Cap ke-${nextStamp}! Kad penuh! (+${pointsPerStamp} PTS) [${staffName}]`, 'success');
-                    showReviewPopup(`🎉 Tahniah! Kad cap penuh! Point anda kekal ${newPoints} PTS!`);
+                    showReviewPopup(`🎉 Kad cap penuh! Kopi Percuma dibuka — tuntut di kaunter dengan PIN staf. (${newPoints} PTS)`);
                 } else {
                     updateStaffPinStatus(`✅ Berjaya! Cap ke-${nextStamp} (+${pointsPerStamp} PTS) [${staffName}]`, 'success');
                 }
@@ -1951,7 +2109,8 @@
                 let currentStamps = userData.stamps || 0;
                 const currentPoints = userData.points || 0;
                 if (currentStamps >= 10) {
-                    await update(userRef, { stamps: 0 }); currentStamps = 0;
+                    await ensureMilestoneClaim(currentActiveCustomerPhone, userData.cardCycle || 0, 10);
+                    await update(userRef, { stamps: 0, cardCycle: (userData.cardCycle || 0) + 1 }); currentStamps = 0;
                     updateQuickStatus('🔄 Kad penuh! Auto reset cap.', 'success');
                     renderCustomerDashboard({ ...userData, stamps: 0, points: currentPoints }, true); return;
                 }
@@ -1962,11 +2121,11 @@
                     const newPoints = currentPoints + pointsPerStamp;
                     const expDate = getExpiryDateString(userData.pointsExpiry);
                     await update(userRef, { stamps: nextStamp, points: newPoints, pointsExpiry: expDate });
+                    await afterStampAdded(userRef, userData, nextStamp);
                     input.value = '';
                     if (nextStamp >= 10) {
-                        await update(userRef, { stamps: 0 });
                         updateQuickStatus(`✅ Cap ke-${nextStamp}! Kad penuh! (+${pointsPerStamp} PTS)`, 'success');
-                        showReviewPopup(`🎉 Tahniah! Kad cap penuh! Point anda kekal ${newPoints} PTS!`);
+                        showReviewPopup(`🎉 Kad cap penuh! Kopi Percuma dibuka — tuntut di kaunter dengan PIN staf. (${newPoints} PTS)`);
                     } else { updateQuickStatus(`✅ Berjaya! Cap ke-${nextStamp} (+${pointsPerStamp} PTS)`, 'success'); }
                     const updatedSnap = await get(userRef);
                     if (updatedSnap.exists()) renderCustomerDashboard(updatedSnap.val(), true);
@@ -2009,12 +2168,11 @@
             const cs = getComputedStyle(nav);
             const bl = parseFloat(cs.borderLeftWidth) || 0;
             const bt = parseFloat(cs.borderTopWidth) || 0;
-            const size = Math.min(btnRect.height, btnRect.width, 46);
-            const x = (btnRect.left - navRect.left - bl) + (btnRect.width - size) / 2;
-            const y = (btnRect.top - navRect.top - bt) + (btnRect.height - size) / 2;
+            const x = btnRect.left - navRect.left - bl;
+            const y = btnRect.top - navRect.top - bt;
             if (!navIndicatorReady) indicator.style.transition = 'none';
-            indicator.style.width = size + 'px';
-            indicator.style.height = size + 'px';
+            indicator.style.width = btnRect.width + 'px';
+            indicator.style.height = btnRect.height + 'px';
             indicator.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
             indicator.style.opacity = '1';
             if (!navIndicatorReady) {
@@ -2222,7 +2380,10 @@
                 const div = document.createElement('div');
                 div.className = 'history-item';
                 div.style.animationDelay = (idx * 50) + 'ms';
-                div.innerHTML = `<div><div class="history-item-title">${item.itemName}</div><div class="history-item-date">${formattedDate}</div></div><div class="history-item-points">-${item.pointsUsed} PTS</div>`;
+                const isStampClaim = item.type === 'stamp';
+                const badge = isStampClaim ? `<div class="history-item-points stamp"><i class="fa-solid fa-check"></i> CAP</div>` : `<div class="history-item-points">-${item.pointsUsed} PTS</div>`;
+                const by = isStampClaim && item.claimedBy ? ` · ${escapeHtml(item.claimedBy)}` : '';
+                div.innerHTML = `<div><div class="history-item-title">${item.itemName}</div><div class="history-item-date">${formattedDate}${by}</div></div>${badge}`;
                 historyContainer.appendChild(div);
             });
         }
@@ -2271,6 +2432,10 @@
             document.getElementById('profile-points-tab').innerText = userPoints;
 
             updateProgressBars(currentStamps, userPoints);
+            currentCardCycle = customerData.cardCycle || 0;
+            currentStampCount = currentStamps;
+            renderStampClaims(customerData.stampClaims);
+            subscribeStampClaims(currentActiveCustomerPhone);
             renderRedemptionHistory(customerData.redemptionHistory, 'cust-history-list');
             renderRedeemItemsForCustomer();
 
@@ -2315,10 +2480,10 @@
             const rewardTag = document.getElementById(elementId);
             if (!rewardTag) return;
             if (currentStamps >= 10) {
-                rewardTag.innerText = currentLang === 'ms' ? "🎉 TAHNIAH! Kad penuh! Auto reset siap! Tebus ganjaran di kaunter!" : "🎉 CONGRATS! Card full! Redeem at counter!";
+                rewardTag.innerText = currentLang === 'ms' ? "🎉 TAHNIAH! Kad penuh! Tuntut Kopi Percuma di bahagian Tuntutan Ganjaran (PIN staf)." : "🎉 CONGRATS! Card full! Claim your Free Coffee below with a staff PIN.";
                 rewardTag.classList.add('completed');
             } else if (currentStamps >= 5) {
-                rewardTag.innerText = currentLang === 'ms' ? `🎁 TAHNIAH! Anda layak tebus Diskaun Rm3 (Kumpul ${10 - currentStamps} cap lagi untuk Kopi Percuma)` : `🎁 CONGRATS! Redeem Diskaun Rm3 (Collect ${10 - currentStamps} more stamps for Free Coffee)`;
+                rewardTag.innerText = currentLang === 'ms' ? `🎁 Diskaun RM3 dibuka! Tuntut dengan PIN staf di bawah. (Kumpul ${10 - currentStamps} cap lagi untuk Kopi Percuma)` : `🎁 RM3 Discount unlocked! Claim below with a staff PIN. (Collect ${10 - currentStamps} more stamps for Free Coffee)`;
                 rewardTag.classList.add('completed');
             } else {
                 rewardTag.innerText = currentLang === 'ms' ? `Kumpul ${5 - currentStamps} cap lagi untuk tebus Diskaun Rm3!` : `Collect ${5 - currentStamps} more stamps to redeem Diskaun Rm3`;
@@ -2375,6 +2540,9 @@
             try { await signOut(auth); } catch (e) { console.warn('signOut err:', e); }
             currentActiveCustomerPhone = null;
             currentActiveTab = 'home';
+            if (stampClaimsUnsub) { try { stampClaimsUnsub(); } catch (e) {} stampClaimsUnsub = null; stampClaimsPhone = null; }
+            renderStampClaims(null);
+            closeClaimPinModal();
             const fab = document.getElementById('fabVoucher'); if (fab) fab.classList.remove('show');
             const fabStaffPin = document.getElementById('fabStaffPin'); if (fabStaffPin) fabStaffPin.classList.remove('show');
             const header = document.getElementById('mainHeader'); if (header) header.classList.remove('hidden');
@@ -2403,7 +2571,8 @@
                     let currentStamps = userData.stamps || 0;
                     const currentPoints = userData.points || 0;
                     if (currentStamps >= 10) {
-                        await update(userRef, { stamps: 0 });
+                        await ensureMilestoneClaim(currentActiveCustomerPhone, userData.cardCycle || 0, 10);
+                        await update(userRef, { stamps: 0, cardCycle: (userData.cardCycle || 0) + 1 });
                         msgElem.innerText = '🔄 Kad penuh! Auto reset cap.';
                         msgElem.style.color = C_OK;
                         renderCustomerDashboard({ ...userData, stamps: 0, points: currentPoints }, true); return;
@@ -2415,12 +2584,12 @@
                         let newPoints = currentPoints + pointsPerStamp;
                         const expDate = getExpiryDateString(userData.pointsExpiry);
                         await update(userRef, { stamps: nextStamp, points: newPoints, pointsExpiry: expDate });
+                        await afterStampAdded(userRef, userData, nextStamp);
                         inputElem.value = '';
                         if (nextStamp >= 10) {
-                            await update(userRef, { stamps: 0 });
                             msgElem.innerText = `✅ Cap ke-${nextStamp}! Kad penuh! (+${pointsPerStamp} PTS)`;
                             msgElem.style.color = C_OK;
-                            showReviewPopup(`🎉 Tahniah! Kad cap penuh! Point anda kekal ${newPoints} PTS!`);
+                            showReviewPopup(`🎉 Kad cap penuh! Kopi Percuma dibuka — tuntut di kaunter dengan PIN staf. (${newPoints} PTS)`);
                         } else {
                             msgElem.innerText = `✨ Cap ke-${nextStamp} ditambah! (+${pointsPerStamp} Points)`;
                             msgElem.style.color = C_OK;
@@ -2479,6 +2648,219 @@
                 overlay.classList.add('active');
             });
         };
+
+        /* ===== 🎁 STAMP CLAIMS — cap ke-5 & ke-10, sahkan dengan PIN staf ===== */
+        const MILESTONES = {
+            5:  { ms: 'Diskaun RM3',    en: 'RM3 Discount',  icon: 'fa-tag' },
+            10: { ms: '1 Kopi Percuma', en: '1 Free Coffee', icon: 'fa-mug-hot' }
+        };
+        const CLAIM_MAX_ATTEMPTS = 5;
+        const CLAIM_LOCK_MS = 60 * 1000;
+        const CLAIM_LOCK_KEY = 'selagi_claim_lock_until';
+        let latestStampClaims = {};
+        let currentCardCycle = 0;
+        let currentStampCount = 0;
+        let stampClaimsUnsub = null;
+        let stampClaimsPhone = null;
+        let activeClaimKey = null;
+        let claimAttempts = 0;
+
+        function milestoneLabel(m) { const d = MILESTONES[m]; return d ? (currentLang === 'en' ? d.en : d.ms) : ''; }
+        function getClaimLockUntil() { try { return parseInt(localStorage.getItem(CLAIM_LOCK_KEY) || '0', 10) || 0; } catch (e) { return 0; } }
+        function setClaimLockUntil(t) { try { localStorage.setItem(CLAIM_LOCK_KEY, String(t)); } catch (e) {} }
+
+        /* One claim per milestone per card cycle — deterministic key prevents duplicates. */
+        async function ensureMilestoneClaim(phone, cycle, milestone) {
+            if (!phone || !MILESTONES[milestone]) return false;
+            const key = `c${cycle}_m${milestone}`;
+            const claimRef = ref(db, `customers/${phone}/stampClaims/${key}`);
+            const snap = await get(claimRef);
+            if (snap.exists()) return false;
+            await set(claimRef, { milestone, cycle, reward: MILESTONES[milestone].ms, status: 'pending', createdAt: new Date().toISOString() });
+            return true;
+        }
+
+        async function afterStampAdded(userRef, userData, nextStamp) {
+            const cycle = userData.cardCycle || 0;
+            if (nextStamp === 5 || nextStamp === 10) {
+                try { await ensureMilestoneClaim(currentActiveCustomerPhone, cycle, nextStamp); } catch (e) { console.warn('Claim create error:', e); }
+            }
+            if (nextStamp >= 10) await update(userRef, { stamps: 0, cardCycle: cycle + 1 });
+            if (nextStamp === 5) setTimeout(() => showReviewPopup('🎁 Cap ke-5! Diskaun RM3 dibuka — tuntut di kaunter dengan PIN staf.'), 600);
+        }
+
+        function subscribeStampClaims(phone) {
+            if (!phone || stampClaimsPhone === phone) return;
+            if (stampClaimsUnsub) { try { stampClaimsUnsub(); } catch (e) {} }
+            stampClaimsPhone = phone;
+            stampClaimsUnsub = onValue(ref(db, `customers/${phone}/stampClaims`), (snap) => { renderStampClaims(snap.val()); });
+        }
+
+        function renderStampClaims(claimsObj) {
+            latestStampClaims = claimsObj || {};
+            const list = document.getElementById('claimList');
+            const countEl = document.getElementById('claimPendingCount');
+            const banner = document.getElementById('homeClaimBanner');
+            const bannerTitle = document.getElementById('homeClaimTitle');
+            const navBtns = document.querySelectorAll('.bottom-nav-btn');
+            const items = Object.keys(latestStampClaims).map(k => ({ key: k, ...latestStampClaims[k] })).filter(c => c && MILESTONES[c.milestone]);
+            const pending = items.filter(c => c.status !== 'claimed').sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+            const claimed = items.filter(c => c.status === 'claimed').sort((a, b) => new Date(b.claimedAt) - new Date(a.claimedAt)).slice(0, 4);
+
+            if (countEl) { countEl.textContent = pending.length; countEl.classList.toggle('has', pending.length > 0); }
+            if (navBtns[1]) navBtns[1].classList.toggle('has-alert', pending.length > 0);
+            if (banner) {
+                banner.classList.toggle('show', pending.length > 0);
+                if (bannerTitle && pending.length) bannerTitle.textContent = pending.length === 1 ? `🎁 ${milestoneLabel(pending[0].milestone)} sedia dituntut!` : `🎁 ${pending.length} ganjaran cap sedia dituntut!`;
+            }
+
+            /* highlight the 5th / 10th slot of the current card if its reward is still pending */
+            const grid = document.getElementById('stamps-container-cap');
+            if (grid) {
+                [5, 10].forEach(m => {
+                    const slot = grid.children[m - 1];
+                    const c = latestStampClaims[`c${currentCardCycle}_m${m}`];
+                    if (slot) slot.classList.toggle('claim-pending', !!(c && c.status !== 'claimed'));
+                });
+            }
+
+            if (!list) return;
+            if (!pending.length && !claimed.length) {
+                list.innerHTML = '<p class="claim-empty">Kumpul 5 cap untuk buka ganjaran pertama anda ☕</p>';
+                return;
+            }
+            list.innerHTML = '';
+            const fmt = (iso) => { if (!iso) return ''; const d = new Date(iso); return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); };
+            pending.concat(claimed).forEach((c, idx) => {
+                const isPending = c.status !== 'claimed';
+                const el = document.createElement('div');
+                el.className = 'claim-item ' + (isPending ? 'pending' : 'claimed');
+                el.style.animationDelay = (idx * 60) + 'ms';
+                const meta = isPending
+                    ? `Cap ke-${c.milestone} · Kad #${(c.cycle || 0) + 1} · dibuka ${fmt(c.createdAt)}`
+                    : `Dituntut ${fmt(c.claimedAt)}${c.claimedBy ? ' · disahkan ' + escapeHtml(c.claimedBy) : ''}`;
+                el.innerHTML = `
+                    <span class="ci-icon"><i class="fa-solid ${MILESTONES[c.milestone].icon}"></i><small>${c.milestone}</small></span>
+                    <div class="ci-body"><strong>${milestoneLabel(c.milestone)}</strong><span>${meta}</span></div>
+                    ${isPending ? `<button type="button" class="ci-btn"><i class="fa-solid fa-key"></i> Tuntut</button>` : `<span class="ci-done"><i class="fa-solid fa-circle-check"></i> Dituntut</span>`}`;
+                if (isPending) el.querySelector('.ci-btn').addEventListener('click', () => openClaimPinModal(c.key));
+                list.appendChild(el);
+            });
+        }
+
+        function setClaimStatus(msg, type) {
+            const el = document.getElementById('claim-pin-status');
+            if (el) { el.className = 'modal-status ' + (type || ''); el.innerHTML = msg; }
+        }
+        function resetClaimModalUI() {
+            const icon = document.getElementById('claimModalIcon');
+            icon.className = 'modal-icon-circle';
+            icon.innerHTML = '<i class="fa-solid fa-gift"></i>';
+            document.getElementById('claimModalTitle').textContent = 'Tuntut Ganjaran';
+            document.getElementById('claimModalDesc').textContent = 'Serahkan telefon kepada staf. Staf perlu masukkan PIN untuk sahkan tuntutan.';
+            document.getElementById('claimPinGroup').style.display = '';
+            document.getElementById('claimActions').style.display = '';
+            const btn = document.getElementById('confirmClaimBtn');
+            btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-check"></i> Sahkan &amp; Tuntut';
+            const input = document.getElementById('claim-pin-input');
+            input.value = ''; input.disabled = false;
+        }
+
+        window.openClaimPinModal = function (key) {
+            if (!currentActiveCustomerPhone) { showReviewPopup('⚠️ Sila log masuk terlebih dahulu.'); return; }
+            const c = latestStampClaims[key];
+            if (!c || c.status === 'claimed') { showReviewPopup('ℹ️ Ganjaran ini sudah dituntut.'); return; }
+            activeClaimKey = key;
+            resetClaimModalUI();
+            document.getElementById('claimSumReward').textContent = milestoneLabel(c.milestone);
+            document.getElementById('claimSumMilestone').textContent = `Cap ke-${c.milestone} · Kad #${(c.cycle || 0) + 1}`;
+            const nm = (document.getElementById('display-cust-name-home') || {}).textContent || 'Pelanggan';
+            document.getElementById('claimSumCustomer').textContent = `${nm} · ${currentActiveCustomerPhone}`;
+            const lockUntil = getClaimLockUntil();
+            if (Date.now() < lockUntil) setClaimStatus(`⏳ Terlalu banyak cubaan salah. Cuba lagi dalam ${Math.ceil((lockUntil - Date.now()) / 1000)} saat.`, 'error');
+            else setClaimStatus('🔑 Hanya staf boleh masukkan PIN', '');
+            document.getElementById('claimPinModal').classList.add('active');
+            setTimeout(() => { const i = document.getElementById('claim-pin-input'); if (i) i.focus(); }, 320);
+        };
+
+        window.closeClaimPinModal = function () {
+            const m = document.getElementById('claimPinModal');
+            if (m) m.classList.remove('active');
+            activeClaimKey = null;
+        };
+        document.getElementById('claimPinModal')?.addEventListener('click', function (e) { if (e.target === this) closeClaimPinModal(); });
+
+        function shakeClaimModal() {
+            const m = document.getElementById('claimPinModal');
+            m.classList.remove('shake'); void m.offsetWidth; m.classList.add('shake');
+            if (navigator.vibrate) { try { navigator.vibrate(120); } catch (e) {} }
+        }
+
+        window.confirmStampClaim = async function () {
+            if (!currentActiveCustomerPhone || !activeClaimKey) return;
+            const input = document.getElementById('claim-pin-input');
+            const btn = document.getElementById('confirmClaimBtn');
+            const lockUntil = getClaimLockUntil();
+            if (Date.now() < lockUntil) { setClaimStatus(`⏳ Terlalu banyak cubaan salah. Cuba lagi dalam ${Math.ceil((lockUntil - Date.now()) / 1000)} saat.`, 'error'); shakeClaimModal(); return; }
+            const pin = input.value.trim();
+            if (!pin) { setClaimStatus('⚠️ Sila masukkan PIN staf.', 'error'); shakeClaimModal(); return; }
+            const staffName = STAFF_PINS[pin];
+            if (!staffName) {
+                claimAttempts++;
+                input.value = '';
+                if (claimAttempts >= CLAIM_MAX_ATTEMPTS) {
+                    claimAttempts = 0;
+                    setClaimLockUntil(Date.now() + CLAIM_LOCK_MS);
+                    setClaimStatus('🔒 PIN salah terlalu banyak kali. Dikunci selama 60 saat.', 'error');
+                } else {
+                    setClaimStatus(`❌ PIN salah. Baki cubaan: ${CLAIM_MAX_ATTEMPTS - claimAttempts}`, 'error');
+                }
+                shakeClaimModal();
+                return;
+            }
+            claimAttempts = 0;
+            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengesahkan...';
+            input.disabled = true;
+            setClaimStatus('⏳ Mengesahkan tuntutan...', '');
+            const key = activeClaimKey;
+            const phone = currentActiveCustomerPhone;
+            const claimRef = ref(db, `customers/${phone}/stampClaims/${key}`);
+            const nowIso = new Date().toISOString();
+            try {
+                /* Atomic: only one device/staff can flip pending -> claimed */
+                const result = await runTransaction(claimRef, (cur) => {
+                    if (!cur || cur.status === 'claimed') return;
+                    return { ...cur, status: 'claimed', claimedAt: nowIso, claimedBy: staffName };
+                });
+                if (!result.committed) {
+                    setClaimStatus('ℹ️ Ganjaran ini sudah dituntut sebelum ini.', 'error');
+                    btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-check"></i> Sahkan &amp; Tuntut'; input.disabled = false;
+                    return;
+                }
+                const claim = result.snapshot.val();
+                await set(push(ref(db, `customers/${phone}/redemptionHistory`)), {
+                    itemName: `Cap ke-${claim.milestone}: ${claim.reward}`,
+                    pointsUsed: 0, type: 'stamp', claimKey: key, claimedBy: staffName, redeemedAt: nowIso
+                });
+                const icon = document.getElementById('claimModalIcon');
+                icon.className = 'modal-icon-circle success';
+                icon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
+                document.getElementById('claimModalTitle').textContent = 'Ganjaran Dituntut!';
+                document.getElementById('claimModalDesc').textContent = `${milestoneLabel(claim.milestone)} telah disahkan oleh ${staffName}. Selamat menikmati ☕`;
+                document.getElementById('claimPinGroup').style.display = 'none';
+                document.getElementById('claimActions').style.display = 'none';
+                setClaimStatus(`✅ ${new Date(nowIso).toLocaleString()}`, 'success');
+                const snap = await get(ref(db, `customers/${phone}`));
+                if (snap.exists()) renderRedemptionHistory(snap.val().redemptionHistory, 'cust-history-list');
+                setTimeout(() => closeClaimPinModal(), 2600);
+            } catch (err) {
+                setClaimStatus('❌ Ralat: ' + (err.message || 'Tidak dapat sahkan tuntutan.'), 'error');
+                btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-check"></i> Sahkan &amp; Tuntut'; input.disabled = false;
+            }
+        };
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') { const m = document.getElementById('claimPinModal'); if (m && m.classList.contains('active')) closeClaimPinModal(); }
+        });
 
         /* ===== 🎁 Reward catalogue (search + chip filters) ===== */
         window.setRedeemFilter = function(f) {
