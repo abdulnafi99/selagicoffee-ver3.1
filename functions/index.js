@@ -7,8 +7,9 @@
  * Admin panel usage (signed in as admin@selagicoffee.app):
  *   import { getFunctions, httpsCallable } from ".../firebase-functions.js";
  *   const fn = httpsCallable(getFunctions(app, "asia-southeast1"), "adminResetPassword");
- *   const { data } = await fn({ phone: "0123456789" });
- *   // show data.tempPassword to the admin to pass to the customer
+ *   const { data } = await fn({ phone: "0123456789", newPassword: "kopi1234" }); // newPassword optional
+ *   // without newPassword a random temporary one is returned in data.tempPassword
+ *   // and the customer must change it after logging in
  */
 const { onCall, HttpsError } = require("firebase-functions/v2/https");
 const admin = require("firebase-admin");
@@ -43,8 +44,12 @@ exports.adminResetPassword = onCall({ region: "asia-southeast1" }, async (reques
     throw new HttpsError("not-found", "Pelanggan tidak wujud dalam sistem.");
   }
 
+  const chosen = request.data && typeof request.data.newPassword === "string" ? request.data.newPassword.trim() : "";
+  if (chosen && chosen.length < 6) {
+    throw new HttpsError("invalid-argument", "Kata laluan baharu perlu sekurang-kurangnya 6 aksara.");
+  }
   const email = `${phone}@${EMAIL_DOMAIN}`;
-  const tempPassword = makeTempPassword();
+  const tempPassword = chosen || makeTempPassword();
   let user;
   try {
     user = await admin.auth().getUserByEmail(email);
@@ -59,8 +64,9 @@ exports.adminResetPassword = onCall({ region: "asia-southeast1" }, async (reques
 
   const now = new Date().toISOString();
   const updates = {
-    [`customers/${phone}/mustChangePassword`]: true,
-    [`customers/${phone}/tempPasswordSetAt`]: now,
+    // Admin-chosen password: no forced change. Random temporary one: customer must change it.
+    [`customers/${phone}/mustChangePassword`]: chosen ? null : true,
+    [`customers/${phone}/tempPasswordSetAt`]: chosen ? null : now,
     [`customers/${phone}/password`]: null, // remove any legacy plaintext password
   };
 
@@ -79,9 +85,10 @@ exports.adminResetPassword = onCall({ region: "asia-southeast1" }, async (reques
     name: (customerSnap.val() || {}).name || "",
     resetBy: request.auth.token.email,
     resetAt: now,
+    mode: chosen ? "admin-set" : "temporary",
     // The temporary password itself is never stored.
   };
 
   await db.ref().update(updates);
-  return { phone, tempPassword };
+  return { phone, tempPassword, mustChange: !chosen };
 });
