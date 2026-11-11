@@ -1464,7 +1464,7 @@
             <button class="modal-close" onclick="closeResetPasswordModal()"><i class="fa-solid fa-xmark"></i></button>
             <div class="modal-icon-circle"><i class="fa-solid fa-key"></i></div>
             <h3 class="modal-title">Set Semula Kata Laluan</h3>
-            <p class="modal-desc">Sahkan identiti anda untuk set semula kata laluan akaun</p>
+            <p class="modal-desc">Isi maklumat di bawah. Permintaan akan dihantar kepada <b>admin</b>. Selepas admin luluskan, log masuk dengan <b>kata laluan baharu</b> yang anda taip di sini.</p>
 
             <div class="form-group" style="text-align:left;">
                 <label>Nombor Telefon</label>
@@ -2329,12 +2329,12 @@
                             status: 'pending',
                             note: 'Customer verified identity but has existing Firebase Auth account'
                         });
-                        setResetStatus('✅ Identiti disahkan! Permintaan reset dihantar kepada staff. Sila hubungi staff untuk bantuan lanjut.', 'success');
+                        setResetStatus('✅ Permintaan dihantar kepada admin. Bila admin maklumkan akaun telah di-reset, log masuk dengan nombor telefon & kata laluan baharu yang anda taip tadi.', 'success');
                         if (btn) btn.textContent = 'Dihantar';
                         setTimeout(() => {
                             closeResetPasswordModal();
-                            showReviewPopup('✅ Permintaan reset dihantar. Staff akan bantu anda.');
-                        }, 3000);
+                            showReviewPopup('✅ Permintaan dihantar. Tunggu admin luluskan, kemudian log masuk dengan kata laluan baharu.');
+                        }, 6000);
                     } else if (createErr.code === 'auth/weak-password') {
                         setResetStatus('⚠️ Kata laluan terlalu lemah. Guna minimum 6 aksara.', 'error');
                         if (btn) { btn.disabled = false; btn.textContent = 'Set Semula'; }
@@ -2691,32 +2691,13 @@
             }
         };
 
+        /* Same flow as the main button — also handles an account the admin has reset. */
         window.loginWithPhoneOnly = async function() {
             const phone = document.getElementById('cust-phone').value.trim();
             const password = document.getElementById('cust-password').value.trim();
             if (!phone || phone.length < 10) { alert(currentLang === 'ms' ? 'Sila masukkan nombor telefon yang sah.' : 'Please enter a valid phone number.'); return; }
             if (!password) { alert(currentLang === 'ms' ? 'Sila masukkan kata laluan.' : 'Please enter your password.'); return; }
-            const email = phoneToEmail(phone);
-            try {
-                const cred = await signInWithEmailAndPassword(auth, email, password);
-                try { await updateProfile(cred.user, { displayName: phone }); } catch (e) {}
-                const snapshot = await get(ref(db, `customers/${phone}`));
-                if (snapshot.exists()) {
-                    const userData = snapshot.val();
-                    currentActiveCustomerPhone = phone;
-                    if (checkPointsExpired(userData)) {
-                        userData.points = 0;
-                        userData.pointsExpiry = getExpiryDateString();
-                        await update(ref(db, `customers/${phone}`), { points: 0, pointsExpiry: userData.pointsExpiry });
-                    }
-                    renderCustomerDashboard(userData);
-                } else { alert(currentLang === 'ms' ? '❌ Data pelanggan tidak dijumpai.' : '❌ Customer data not found.'); }
-            } catch (err) {
-                if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') { alert(currentLang === 'ms' ? '❌ Nombor telefon tidak berdaftar atau kata laluan salah.' : '❌ Phone not registered or wrong password.'); }
-                else if (err.code === 'auth/wrong-password') { alert(currentLang === 'ms' ? '❌ Kata laluan salah!' : '❌ Wrong password!'); }
-                else if (err.code === 'auth/too-many-requests') { alert(currentLang === 'ms' ? '⚠️ Terlalu banyak cubaan. Sila cuba sebentar lagi.' : '⚠️ Too many attempts. Try again later.'); }
-                else { alert('Ralat: ' + err.message); }
-            }
+            return handleCustomerAuth({ preventDefault() {} });
         };
 
         function getExpiryDateString(existingExpiry) {
@@ -2762,7 +2743,8 @@
                         try {
                             const cred = await createUserWithEmailAndPassword(auth, email, password);
                             try { await updateProfile(cred.user, { displayName: phone }); } catch (e) {}
-                            if (dbData.password) { await update(userRef, { password: null }); }
+                            await update(userRef, { password: null, mustChangePassword: null, tempPasswordSetAt: null, passwordChangedAt: new Date().toISOString() });
+                            dbData.mustChangePassword = null;
                             currentActiveCustomerPhone = phone;
                             let userData = dbData;
                             if (checkPointsExpired(userData)) {
@@ -2771,7 +2753,7 @@
                                 await update(userRef, { points: 0, pointsExpiry: userData.pointsExpiry });
                             }
                             renderCustomerDashboard(userData);
-                            showReviewPopup(currentLang === 'ms' ? '✅ Akaun berjaya diselaraskan! Kata laluan baharu disimpan.' : '✅ Account synced! New password saved.');
+                            showReviewPopup(currentLang === 'ms' ? '✅ Kata laluan baharu berjaya disimpan. Selamat kembali!' : '✅ New password saved. Welcome back!');
                         } catch (createErr) {
                             if (createErr.code === 'auth/email-already-in-use') { alert(currentLang === 'ms' ? '❌ Kata laluan salah! Sila cuba lagi atau klik "Lupa Kata Laluan?".' : '❌ Wrong password! Try again or click "Forgot Password?".'); }
                             else if (createErr.code === 'auth/weak-password') { alert(currentLang === 'ms' ? '⚠️ Kata laluan terlalu lemah. Guna sekurang-kurangnya 6 aksara.' : '⚠️ Password too weak. Use at least 6 characters.'); }
