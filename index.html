@@ -593,6 +593,7 @@
         .claim-summary div:first-child { border-top: none; }
         .claim-summary span { color: var(--text-muted); font-weight: 600; }
         .claim-summary b { color: var(--cream); font-weight: 800; text-align: right; }
+        #forcePwModal { z-index: 4900; }
         #claimPinModal .modal-input-group input { font-size: 1.2rem; letter-spacing: 8px; }
         #claimPinModal .modal-input-group input::placeholder { font-size: 0.8rem; letter-spacing: 1px; }
         #claimPinModal.shake .modal-box { animation: pinShake 0.45s ease; }
@@ -1495,6 +1496,35 @@
         </div>
     </div>
 
+    <!-- 🔐 FORCED PASSWORD CHANGE (after admin temporary password) -->
+    <div class="modal-overlay" id="forcePwModal" aria-modal="true" role="dialog">
+        <div class="modal-box" style="max-width: 380px;">
+            <div class="modal-badge-tier"><i class="fa-solid fa-shield-halved"></i> KESELAMATAN AKAUN</div>
+            <div class="modal-icon-circle"><i class="fa-solid fa-lock"></i></div>
+            <h3 class="modal-title">Tukar Kata Laluan Sementara</h3>
+            <p class="modal-desc">Anda log masuk dengan kata laluan sementara daripada admin. Sila tetapkan kata laluan baharu anda sendiri untuk teruskan.</p>
+            <div class="form-group" style="text-align:left;">
+                <label>Kata Laluan Baharu</label>
+                <div class="password-wrapper">
+                    <input type="password" id="force-pw-new" class="form-control" placeholder="Minimum 6 aksara" autocomplete="new-password">
+                    <button type="button" class="toggle-password" onclick="togglePasswordVisibility('force-pw-new', this)" aria-label="Tunjuk/sorok kata laluan"><i class="fa-regular fa-eye"></i></button>
+                </div>
+            </div>
+            <div class="form-group" style="text-align:left;">
+                <label>Sahkan Kata Laluan</label>
+                <div class="password-wrapper">
+                    <input type="password" id="force-pw-confirm" class="form-control" placeholder="Taip semula kata laluan" autocomplete="new-password" onkeypress="if(event.key==='Enter') submitForcePw()">
+                    <button type="button" class="toggle-password" onclick="togglePasswordVisibility('force-pw-confirm', this)" aria-label="Tunjuk/sorok kata laluan"><i class="fa-regular fa-eye"></i></button>
+                </div>
+            </div>
+            <div class="modal-actions" style="margin-top:6px;">
+                <button class="btn-modal btn-modal-cancel" onclick="forcePwLogout()">Log Keluar</button>
+                <button class="btn-modal btn-modal-confirm" id="forcePwBtn" onclick="submitForcePw()">Simpan</button>
+            </div>
+            <span class="modal-status" id="force-pw-status">🔒 Kata laluan sementara perlu ditukar sebelum guna app</span>
+        </div>
+    </div>
+
     <!-- ✅ STAMP CLAIM — STAFF PIN VERIFICATION -->
     <div class="modal-overlay" id="claimPinModal">
         <div class="modal-box">
@@ -2111,7 +2141,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
         import { getDatabase, ref, set, get, child, update, onValue, remove, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, updatePassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBeg1YlG6KSxTxxaZa_Lsa6JEf90xK3gUg",
@@ -2292,7 +2322,7 @@
                     }, 2200);
                 } catch (createErr) {
                     if (createErr.code === 'auth/email-already-in-use') {
-                        await set(ref(db, `resetRequests/${phone}`), {
+                        await set(push(ref(db, 'passwordResetRequests')), {
                             phone: phone,
                             name: name,
                             requestedAt: new Date().toISOString(),
@@ -2860,7 +2890,8 @@
 
             setTimeout(updateNavIndicator, 120);
             setTimeout(updateNavIndicator, 900);
-            if (!keepCurrentTab && window.maybeAutoStartTour) window.maybeAutoStartTour(name);
+            if (customerData.mustChangePassword) setTimeout(openForcePwModal, 350);
+            else if (!keepCurrentTab && window.maybeAutoStartTour) window.maybeAutoStartTour(name);
         }
 
         const CUP_SVG = '<svg class="cup" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 4.5h13l-.6 2.5H6.1z"/><path d="M6.6 8h10.8l-1.5 11.6a1.2 1.2 0 0 1-1.2 1H9.3a1.2 1.2 0 0 1-1.2-1z"/><path d="M8.3 11.5h7.4l-.5 4H8.8z" stroke-width="0" fill="currentColor" opacity=".25"/></svg>';
@@ -2979,6 +3010,7 @@
             renderStampClaims(null);
             closeClaimPinModal();
             if (window.endAppTour) window.endAppTour(false);
+            closeForcePwModal();
             flipLoyaltyCard(false);
             const fab = document.getElementById('fabVoucher'); if (fab) fab.classList.remove('show');
             const fabStaffPin = document.getElementById('fabStaffPin'); if (fabStaffPin) fabStaffPin.classList.remove('show');
@@ -3084,6 +3116,52 @@
                 };
                 overlay.classList.add('active');
             });
+        };
+
+        /* ===== 🔐 Forced password change after admin temporary password ===== */
+        function setForcePwStatus(msg, type) {
+            const el = document.getElementById('force-pw-status');
+            if (el) { el.className = 'modal-status ' + (type || ''); el.textContent = msg; }
+        }
+        window.openForcePwModal = function () {
+            const m = document.getElementById('forcePwModal');
+            if (!m || m.classList.contains('active')) return;
+            if (window.endAppTour) window.endAppTour(false);
+            document.getElementById('force-pw-new').value = '';
+            document.getElementById('force-pw-confirm').value = '';
+            const btn = document.getElementById('forcePwBtn'); btn.disabled = false; btn.textContent = 'Simpan';
+            setForcePwStatus('🔒 Kata laluan sementara perlu ditukar sebelum guna app', '');
+            m.classList.add('active');
+            setTimeout(() => { const i = document.getElementById('force-pw-new'); if (i) i.focus(); }, 320);
+        };
+        function closeForcePwModal() { const m = document.getElementById('forcePwModal'); if (m) m.classList.remove('active'); }
+        window.forcePwLogout = function () { closeForcePwModal(); logoutCustomer(); };
+        window.submitForcePw = async function () {
+            const p1 = document.getElementById('force-pw-new').value;
+            const p2 = document.getElementById('force-pw-confirm').value;
+            const btn = document.getElementById('forcePwBtn');
+            if (!p1 || p1.length < 6) { setForcePwStatus('⚠️ Kata laluan perlu sekurang-kurangnya 6 aksara.', 'error'); return; }
+            if (p1 !== p2) { setForcePwStatus('⚠️ Pengesahan kata laluan tidak sepadan.', 'error'); return; }
+            if (!auth.currentUser || !currentActiveCustomerPhone) { setForcePwStatus('⚠️ Sesi tamat. Sila log masuk semula.', 'error'); return; }
+            btn.disabled = true; btn.textContent = 'Menyimpan...';
+            setForcePwStatus('⏳ Mengemaskini kata laluan...', '');
+            try {
+                await updatePassword(auth.currentUser, p1);
+                await update(ref(db, `customers/${currentActiveCustomerPhone}`), { mustChangePassword: null, tempPasswordSetAt: null, passwordChangedAt: new Date().toISOString() });
+                setForcePwStatus('✅ Kata laluan baharu berjaya disimpan!', 'success');
+                btn.textContent = 'Selesai';
+                setTimeout(() => {
+                    closeForcePwModal();
+                    showReviewPopup('✅ Kata laluan baharu disimpan. Selamat datang!');
+                    if (window.maybeAutoStartTour) window.maybeAutoStartTour((document.getElementById('display-cust-name-home') || {}).textContent || '');
+                }, 1400);
+            } catch (err) {
+                btn.disabled = false; btn.textContent = 'Simpan';
+                if (err.code === 'auth/requires-recent-login') setForcePwStatus('⚠️ Sesi terlalu lama. Sila Log Keluar dan log masuk semula guna kata laluan sementara.', 'error');
+                else if (err.code === 'auth/weak-password') setForcePwStatus('⚠️ Kata laluan terlalu lemah. Guna minimum 6 aksara.', 'error');
+                else if (err.code === 'auth/network-request-failed') setForcePwStatus('⚠️ Ralat rangkaian. Sila cuba lagi.', 'error');
+                else setForcePwStatus('❌ Ralat: ' + (err.message || 'Tidak dapat tukar kata laluan.'), 'error');
+            }
         };
 
         /* ===== 🎁 STAMP CLAIMS — cap ke-5 & ke-10, sahkan dengan PIN staf ===== */

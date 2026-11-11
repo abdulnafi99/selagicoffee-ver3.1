@@ -1,0 +1,63 @@
+{
+  "rules": {
+    "customers": {
+      ".read": true,
+      "$phone": {
+        ".write": "auth != null && (auth.token.email == 'admin@selagicoffee.app' || auth.token.email == $phone + '@selagicoffee.app')",
+        "name":   { ".validate": "newData.isString()" },
+        "phone":  { ".validate": "newData.isString() && newData.val() == $phone" },
+        "points": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+        "stamps": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 10" },
+        "cardCycle": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+        "mustChangePassword": { ".validate": "newData.isBoolean()" },
+        "tempPasswordSetAt":  { ".validate": "newData.isString()" },
+        "passwordChangedAt":  { ".validate": "newData.isString()" },
+        "fcmToken": { ".validate": "newData.isString()" },
+        "stampClaims": {
+          "$claimId": {
+            ".validate": "newData.hasChildren(['milestone','cycle','status','createdAt']) && (newData.child('milestone').val() == 5 || newData.child('milestone').val() == 10) && (newData.child('status').val() == 'pending' || newData.child('status').val() == 'claimed') && !(data.child('status').val() == 'claimed' && newData.child('status').val() != 'claimed')"
+          }
+        },
+        "redemptionHistory": {
+          "$historyId": {
+            ".validate": "newData.hasChildren(['itemName','pointsUsed','redeemedAt'])"
+          }
+        }
+      }
+    },
+
+    "reviews": {
+      ".read": true,
+      "$reviewId": {
+        ".write": "auth != null && (auth.token.email == 'admin@selagicoffee.app' || ((!data.exists() || data.child('ownerPhone').val() + '@selagicoffee.app' == auth.token.email) && (!newData.exists() || newData.child('ownerPhone').val() + '@selagicoffee.app' == auth.token.email)))",
+        ".validate": "newData.hasChildren(['name','text','rating','ownerPhone','timestamp']) && newData.child('rating').isNumber() && newData.child('rating').val() >= 1 && newData.child('rating').val() <= 5 && (!newData.child('imageData').exists() || newData.child('imageData').val().length < 700000)"
+      }
+    },
+
+    "promotions":  { ".read": true, ".write": "auth != null && auth.token.email == 'admin@selagicoffee.app'" },
+    "redeemItems": { ".read": true, ".write": "auth != null && auth.token.email == 'admin@selagicoffee.app'" },
+    "infoTerkini": { ".read": true, ".write": "auth != null && auth.token.email == 'admin@selagicoffee.app'" },
+    "broadcasts":  { ".read": true, ".write": "auth != null && auth.token.email == 'admin@selagicoffee.app'" },
+
+    "passwordResetRequests": {
+      ".read":  "auth != null && auth.token.email == 'admin@selagicoffee.app'",
+      ".write": "auth != null && auth.token.email == 'admin@selagicoffee.app'",
+      ".indexOn": ["phone", "status"],
+      "$pushId": {
+        ".write": "!data.exists() && newData.exists()",
+        ".validate": "newData.hasChildren(['phone','name','requestedAt','status']) && newData.child('phone').isString() && newData.child('phone').val().matches(/^[0-9]{10,11}$/) && newData.child('status').isString()"
+      }
+    },
+    "passwordResetLogs": {
+      ".read":  "auth != null && auth.token.email == 'admin@selagicoffee.app'",
+      ".write": "auth != null && auth.token.email == 'admin@selagicoffee.app'"
+    },
+
+    "pushTokens": {
+      "$token": {
+        ".write": "auth != null || (auth == null && newData.child('token').val() == $token)",
+        ".validate": "newData.hasChildren(['token','updatedAt'])"
+      }
+    }
+  }
+}
