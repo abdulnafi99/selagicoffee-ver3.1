@@ -19,8 +19,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
     <link rel="icon" type="image/png" sizes="48x48" href="icons/favicon-48.png">
     <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
-    <link rel="preconnect" href="https://encrypted-tbn0.gstatic.com" crossorigin>
-    <link rel="preload" as="image" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKNTcswI0MKvgwch0V6Lal3qR08ozQYkBACiB7xYPitnVeS5yWka1j3Zg&amp;s=10">
+    <link rel="preload" as="image" href="icons/splash-logo.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -763,7 +762,7 @@
         #splashScreen.done .sr-shine { opacity: 0; }
         #splashScreen.done .sr-progress { animation: srDone 0.6s var(--ease); }
         @keyframes srDone { 50% { stroke-width: 5.5; filter: drop-shadow(0 0 8px rgba(227,204,148,0.9)); } }
-        .splash-disc { position: absolute; inset: 11%; border-radius: 50%; overflow: hidden; background: #F7F1E4; box-shadow: 0 18px 40px rgba(0,0,0,0.35), 0 0 0 1px rgba(227,204,148,0.55), inset 0 0 0 1px rgba(255,255,255,0.4); animation: discBreath 3.2s ease-in-out 0.9s infinite; }
+        .splash-disc { position: absolute; inset: 11%; border-radius: 50%; overflow: hidden; background: #44420F; box-shadow: 0 18px 40px rgba(0,0,0,0.35), 0 0 0 1px rgba(227,204,148,0.55), inset 0 0 0 1px rgba(255,255,255,0.4); animation: discBreath 3.2s ease-in-out 0.9s infinite; }
         @keyframes discBreath { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.018); } }
         #splashScreen.done .splash-disc { animation: discPop 0.6s var(--spring); }
         @keyframes discPop { 50% { transform: scale(1.05); } }
@@ -1024,9 +1023,9 @@
             </svg>
             <div class="splash-disc">
                 <img id="splashImg" alt="Selagi Coffee" decoding="async"
-                     src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKNTcswI0MKvgwch0V6Lal3qR08ozQYkBACiB7xYPitnVeS5yWka1j3Zg&amp;s=10"
+                     src="icons/splash-logo.png"
                      onload="this.classList.add('loaded')"
-                     onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src='icons/splash-logo.png';}else{this.classList.add('loaded');}">
+                     onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src='logo.jpg';}else{this.classList.add('loaded');}">
             </div>
         </div>
         <div class="splash-meta">

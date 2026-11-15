@@ -30,8 +30,7 @@ const CACHEABLE_HOSTS = [
     'fonts.googleapis.com',
     'fonts.gstatic.com',
     'cdnjs.cloudflare.com',
-    'images.unsplash.com',
-    'encrypted-tbn0.gstatic.com'
+    'images.unsplash.com'
 ];
 
 /* Live services — always go straight to the network, never cached. */
