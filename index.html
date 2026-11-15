@@ -19,7 +19,8 @@
     <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
     <link rel="icon" type="image/png" sizes="48x48" href="icons/favicon-48.png">
     <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
-    <link rel="preload" as="image" href="icons/splash-logo.png">
+    <link rel="preconnect" href="https://encrypted-tbn0.gstatic.com" crossorigin>
+    <link rel="preload" as="image" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKNTcswI0MKvgwch0V6Lal3qR08ozQYkBACiB7xYPitnVeS5yWka1j3Zg&amp;s=10">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -742,25 +743,39 @@
         .notif-toast .nt-close { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.8rem; padding: 2px; flex-shrink: 0; }
 
         /* splash */
-        #splashScreen { position: fixed; inset: 0; z-index: 99999; background: #44420F; background-image: radial-gradient(circle at 50% 46%, #44420F 0%, #44420F 38%, #2F2D09 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); transition: opacity 0.8s var(--ease), visibility 0.8s ease; opacity: 1; visibility: visible; }
+        /* ⭐ SPLASH — round logo with a live loading ring */
+        #splashScreen { position: fixed; inset: 0; z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px;
+            padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
+            background: #3B3A0E; background-image: radial-gradient(circle at 50% 42%, #4E4C16 0%, #3B3A0E 48%, #262509 100%);
+            transition: opacity 0.7s var(--ease), visibility 0.7s ease; opacity: 1; visibility: visible; }
         #splashScreen.hide { opacity: 0; visibility: hidden; pointer-events: none; }
-        #splashScreen .splash-logo-wrap { position: relative; width: min(64vw, 260px); aspect-ratio: 1; display: flex; align-items: center; justify-content: center; }
-        #splashScreen .splash-logo-wrap::before, #splashScreen .splash-logo-wrap::after { content: ''; position: absolute; inset: 12%; border-radius: 50%; border: 1px solid rgba(243,235,221,0.32); animation: splashRing 2.8s ease-out infinite; }
-        #splashScreen .splash-logo-wrap::after { animation-delay: 1.4s; }
-        @keyframes splashRing { 0% { transform: scale(0.9); opacity: 0.9; } 100% { transform: scale(1.45); opacity: 0; } }
-        #splashScreen .splash-logo { position: relative; z-index: 2; width: 100%; height: 100%; object-fit: contain; border-radius: 0; animation: splashLogoIn 1.2s var(--ease) both; -webkit-mask-image: radial-gradient(circle, #000 62%, transparent 72%); mask-image: radial-gradient(circle, #000 62%, transparent 72%); }
-        @keyframes splashLogoIn { 0% { transform: scale(0.82); opacity: 0; filter: blur(6px); } 100% { transform: none; opacity: 1; filter: none; } }
-        #splashScreen .splash-sheen { position: absolute; inset: 0; z-index: 3; pointer-events: none; overflow: hidden; border-radius: 50%; -webkit-mask-image: radial-gradient(circle, #000 55%, transparent 70%); mask-image: radial-gradient(circle, #000 55%, transparent 70%); }
-        #splashScreen .splash-sheen::after { content: ''; position: absolute; top: -20%; left: -60%; width: 40%; height: 140%; background: linear-gradient(90deg, transparent, rgba(255,248,230,0.22), transparent); transform: rotate(18deg); animation: splashSheen 2.4s ease-in-out 0.9s infinite; }
-        @keyframes splashSheen { 0% { left: -60%; } 60%, 100% { left: 130%; } }
-        #splashScreen .splash-title { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
-        #splashScreen .splash-sub { font-size: 0.62rem; color: #E3CC94; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; margin-top: -4px; opacity: 0; animation: splashFadeUp 0.8s var(--ease) 0.8s forwards; }
-        @keyframes splashFadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
-        #splashScreen .splash-loader { margin-top: 18px; display: flex; gap: 7px; opacity: 0; animation: splashFadeUp 0.7s ease-out 1.05s forwards; }
-        #splashScreen .splash-loader span { width: 6px; height: 6px; border-radius: 50%; background: #F3EBDD; animation: splashDot 1.3s ease-in-out infinite; }
-        #splashScreen .splash-loader span:nth-child(2) { animation-delay: 0.18s; }
-        #splashScreen .splash-loader span:nth-child(3) { animation-delay: 0.36s; }
-        @keyframes splashDot { 0%, 100% { transform: translateY(0); opacity: 0.35; } 50% { transform: translateY(-7px); opacity: 1; } }
+        #splashScreen.hide .splash-orb { transform: scale(1.06); filter: blur(2px); }
+        .splash-orb { position: relative; width: min(48vw, 184px); aspect-ratio: 1; transition: transform 0.7s var(--ease), filter 0.7s ease; animation: orbIn 0.9s var(--ease) both; }
+        @keyframes orbIn { from { opacity: 0; transform: scale(0.86); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+        .splash-orb::before { content: ''; position: absolute; inset: -18%; border-radius: 50%; background: radial-gradient(circle, rgba(227,204,148,0.20) 0%, transparent 62%); animation: orbGlow 3.2s ease-in-out infinite; pointer-events: none; }
+        @keyframes orbGlow { 0%, 100% { opacity: 0.55; transform: scale(0.96); } 50% { opacity: 1; transform: scale(1.04); } }
+        .splash-ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); overflow: visible; }
+        .splash-ring circle { fill: none; stroke-linecap: round; }
+        .splash-ring .sr-track { stroke: rgba(243,235,221,0.13); stroke-width: 3; }
+        .splash-ring .sr-progress { stroke: url(#splashGrad); stroke-width: 3.6; stroke-dasharray: 100; stroke-dashoffset: 100; filter: drop-shadow(0 0 3px rgba(227,204,148,0.55)); }
+        .splash-ring .sr-shine { stroke: rgba(255,248,230,0.55); stroke-width: 3.6; stroke-dasharray: 5 95; transform-origin: 60px 60px; animation: srSpin 1.5s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite; transition: opacity 0.4s ease; }
+        @keyframes srSpin { to { transform: rotate(360deg); } }
+        #splashScreen.done .sr-shine { opacity: 0; }
+        #splashScreen.done .sr-progress { animation: srDone 0.6s var(--ease); }
+        @keyframes srDone { 50% { stroke-width: 5.5; filter: drop-shadow(0 0 8px rgba(227,204,148,0.9)); } }
+        .splash-disc { position: absolute; inset: 11%; border-radius: 50%; overflow: hidden; background: #F7F1E4; box-shadow: 0 18px 40px rgba(0,0,0,0.35), 0 0 0 1px rgba(227,204,148,0.55), inset 0 0 0 1px rgba(255,255,255,0.4); animation: discBreath 3.2s ease-in-out 0.9s infinite; }
+        @keyframes discBreath { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.018); } }
+        #splashScreen.done .splash-disc { animation: discPop 0.6s var(--spring); }
+        @keyframes discPop { 50% { transform: scale(1.05); } }
+        .splash-disc img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transform: scale(1.06); transition: opacity 0.6s ease, transform 0.9s var(--ease); }
+        .splash-disc img.loaded { opacity: 1; transform: none; }
+        .splash-disc::after { content: ''; position: absolute; top: -30%; left: -70%; width: 45%; height: 160%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent); transform: rotate(20deg); animation: discSheen 2.8s ease-in-out 1.1s infinite; pointer-events: none; }
+        @keyframes discSheen { 0% { left: -70%; } 55%, 100% { left: 140%; } }
+        .splash-meta { display: flex; flex-direction: column; align-items: center; gap: 8px; animation: splashFadeUp 0.8s var(--ease) 0.35s both; }
+        .splash-title { font-family: var(--font-display); font-weight: 500; font-size: 1.7rem; letter-spacing: 1px; color: #F3EBDD; margin: 0; line-height: 1; }
+        .splash-sub { font-size: 0.56rem; color: #E3CC94; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; margin: 0; }
+        .splash-pct { font-size: 0.62rem; font-weight: 700; color: rgba(243,235,221,0.6); letter-spacing: 1.5px; font-variant-numeric: tabular-nums; margin-top: 4px; min-width: 4ch; text-align: center; }
+        @keyframes splashFadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 
         /* QR fullscreen */
         .qr-fullscreen-overlay { position: fixed; inset: 0; background: radial-gradient(circle at 50% 40%, #FFFFFF 0%, #EFE7D8 75%); z-index: 5000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; opacity: 0; visibility: hidden; transition: opacity 0.45s var(--ease), visibility 0.45s ease; text-align: center; }
@@ -992,16 +1007,82 @@
 </head>
 <body>
 
-    <!-- ⭐ SPLASH SCREEN -->
-    <div id="splashScreen">
-        <div class="splash-logo-wrap">
-            <img src="icons/splash-logo.png" alt="Selagi Coffee" class="splash-logo">
-            <span class="splash-sheen" aria-hidden="true"></span>
+    <!-- ⭐ SPLASH SCREEN — round logo + live loading ring -->
+    <div id="splashScreen" role="status" aria-live="polite" aria-label="Memuatkan Selagi Coffee">
+        <div class="splash-orb">
+            <svg class="splash-ring" viewBox="0 0 120 120" aria-hidden="true">
+                <defs>
+                    <linearGradient id="splashGrad" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0" stop-color="#F6E7BC"/>
+                        <stop offset="0.55" stop-color="#E3CC94"/>
+                        <stop offset="1" stop-color="#C8A45A"/>
+                    </linearGradient>
+                </defs>
+                <circle class="sr-track" cx="60" cy="60" r="57"/>
+                <circle class="sr-progress" id="splashProgress" cx="60" cy="60" r="57" pathLength="100"/>
+                <circle class="sr-shine" cx="60" cy="60" r="57" pathLength="100"/>
+            </svg>
+            <div class="splash-disc">
+                <img id="splashImg" alt="Selagi Coffee" decoding="async"
+                     src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKNTcswI0MKvgwch0V6Lal3qR08ozQYkBACiB7xYPitnVeS5yWka1j3Zg&amp;s=10"
+                     onload="this.classList.add('loaded')"
+                     onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src='icons/splash-logo.png';}else{this.classList.add('loaded');}">
+            </div>
         </div>
-        <h1 class="splash-title">Selagi Coffee</h1>
-        <p class="splash-sub">Loyalty Reward & Tiers</p>
-        <div class="splash-loader"><span></span><span></span><span></span></div>
+        <div class="splash-meta">
+            <h1 class="splash-title">Selagi Coffee</h1>
+            <p class="splash-sub">Loyalty Reward &amp; Tiers</p>
+            <span class="splash-pct" id="splashPct">0%</span>
+        </div>
     </div>
+
+    <script>
+    /* Splash progress: ring follows real loading milestones, eased every frame. */
+    (function () {
+        'use strict';
+        var MIN_MS = 1800, MAX_MS = 6000, start = Date.now();
+        var shown = 0, target = 8, finished = false, raf = 0;
+        var ring = document.getElementById('splashProgress');
+        var pct = document.getElementById('splashPct');
+        var splash = document.getElementById('splashScreen');
+        function bump(v) { if (v > target) target = v; }
+        function frame() {
+            // creep forward while waiting so the ring never looks stuck (stops short of 90%)
+            if (target < 90 && !finished) target += (90 - target) * 0.004;
+            shown += (target - shown) * (target >= 100 ? 0.14 : 0.08);
+            if (target >= 100 && shown > 99.6) shown = 100;
+            if (ring) ring.style.strokeDashoffset = String(100 - shown);
+            if (pct) pct.textContent = Math.round(shown) + '%';
+            if (shown >= 100 && finished) { done(); return; }
+            raf = requestAnimationFrame(frame);
+        }
+        function done() {
+            cancelAnimationFrame(raf);
+            if (!splash || splash.dataset.hidden === '1') return;
+            splash.dataset.hidden = '1';
+            splash.classList.add('done');
+            setTimeout(function () {
+                splash.classList.add('hide');
+                var mt = document.getElementById('metaThemeColor'); if (mt) mt.setAttribute('content', '#FBF7F0');
+                setTimeout(function () { if (splash.parentNode) splash.style.display = 'none'; }, 750);
+            }, 520);
+        }
+        function finish() {
+            if (finished) return;
+            var wait = Math.max(0, MIN_MS - (Date.now() - start));
+            setTimeout(function () { finished = true; bump(100); }, wait);
+        }
+        var img = document.getElementById('splashImg');
+        if (img) { if (img.complete) bump(40); else img.addEventListener('load', function () { bump(40); }); }
+        if (document.readyState !== 'loading') bump(55);
+        else document.addEventListener('DOMContentLoaded', function () { bump(55); });
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { bump(72); });
+        if (document.readyState === 'complete') finish();
+        else window.addEventListener('load', function () { bump(88); finish(); });
+        setTimeout(finish, MAX_MS);            // never block the app on a slow asset
+        raf = requestAnimationFrame(frame);
+    })();
+    </script>
 
     <!-- ✅ QR FULLSCREEN POPUP -->
     <div class="qr-fullscreen-overlay" id="qrFullscreenOverlay" onclick="closeQRFullscreen(event)">
@@ -1700,19 +1781,6 @@
         </div>
     </div>
 
-    <script>
-    (function() {
-        'use strict';
-        window.setTimeout(function() {
-            var splash = document.getElementById('splashScreen');
-            if (splash && !splash.classList.contains('hide')) {
-                console.warn('⚠️ Splash fallback triggered');
-                splash.classList.add('hide');
-                splash.style.display = 'none';
-            }
-        }, 4500);
-    })();
-    </script>
 
     <script>
     (function () {
@@ -1852,27 +1920,6 @@
     })();
     </script>
 
-    <script>
-    (function () {
-        'use strict';
-        var SPLASH_MIN_MS = 2200;
-        var startTime = Date.now();
-        function hideSplash() {
-            var splash = document.getElementById('splashScreen');
-            if (!splash || splash.dataset.hidden === '1') return;
-            splash.dataset.hidden = '1';
-            var elapsed = Date.now() - startTime;
-            var remaining = Math.max(0, SPLASH_MIN_MS - elapsed);
-            setTimeout(function () {
-                splash.classList.add('hide');
-                var mt = document.getElementById('metaThemeColor'); if (mt) mt.setAttribute('content', '#FBF7F0');
-                setTimeout(function () { if (splash && splash.parentNode) splash.style.display = 'none'; }, 800);
-            }, remaining);
-        }
-        if (document.readyState === 'complete') hideSplash();
-        else { window.addEventListener('load', hideSplash); setTimeout(hideSplash, 3000); }
-    })();
-    </script>
 
 
     <script>
