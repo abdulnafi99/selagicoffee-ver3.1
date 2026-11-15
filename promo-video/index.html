@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="ms" data-resolution="portrait" data-composition-variables='[
+  {"id":"cta","type":"string","label":"Teks butang CTA","default":"Hubungi kami untuk demo"},
+  {"id":"shopName","type":"string","label":"Nama kedai contoh","default":"Selagi Coffee"}
+]'>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/gsap.min.js"></script>
+    <style>
+      /* latin */
+      @font-face {
+        font-family: 'Cormorant Garamond';
+        font-style: italic;
+        font-weight: 500;
+        font-display: block;
+        src: url('assets/fonts/CormorantGaramond-500i.woff2') format('woff2');
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+      }
+      /* latin */
+      @font-face {
+        font-family: 'Cormorant Garamond';
+        font-style: normal;
+        font-weight: 500;
+        font-display: block;
+        src: url('assets/fonts/CormorantGaramond-500.woff2') format('woff2');
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+      }
+      /* latin */
+      @font-face {
+        font-family: 'Cormorant Garamond';
+        font-style: normal;
+        font-weight: 600;
+        font-display: block;
+        src: url('assets/fonts/CormorantGaramond-600.woff2') format('woff2');
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+      }
+      /* latin */
+      @font-face {
+        font-family: 'Manrope';
+        font-style: normal;
+        font-weight: 500;
+        font-display: block;
+        src: url('assets/fonts/Manrope-500.woff2') format('woff2');
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+      }
+      /* latin */
+      @font-face {
+        font-family: 'Manrope';
+        font-style: normal;
+        font-weight: 700;
+        font-display: block;
+        src: url('assets/fonts/Manrope-700.woff2') format('woff2');
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+      }
+      /* latin */
+      @font-face {
+        font-family: 'Manrope';
+        font-style: normal;
+        font-weight: 800;
+        font-display: block;
+        src: url('assets/fonts/Manrope-800.woff2') format('woff2');
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+      }
+      
+      :root {
+        --forest: #2E4A2B;
+        --forest-deep: #1B2E1C;
+        --olive: #44420F;
+        --cream: #F3EBDD;
+        --paper: #FBF7F0;
+        --gold: #C8A45A;
+        --gold-soft: #E3CC94;
+        --ink: #1F2A1C;
+        --muted: #6B7563;
+        --red: #B5462F;
+        --serif: 'Cormorant Garamond', Georgia, serif;
+        --sans: 'Manrope', 'Helvetica Neue', Arial, sans-serif;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--forest-deep); }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+      .clip { position: absolute; inset: 0; overflow: hidden; }
+      .center { position: absolute; left: 0; right: 0; display: flex; flex-direction: column; align-items: center; text-align: center; }
+      .center { padding: 0 192px; }
+      .center[data-split] { display: block; }
+
+      /* word-mask reveal: <span class="w"><span class="wi">word</span></span> */
+      .w { display: inline-block; overflow: hidden; vertical-align: top; padding: 0.02em 0.06em 0.16em; margin: -0.02em -0.06em -0.16em; }
+      .wi { display: inline-block; will-change: transform; }
+      [data-chars] .w { padding-left: 0; padding-right: 0; margin-left: 0; margin-right: 0; }
+
+      /* ---------- global overlays ---------- */
+      #grain { z-index: 90; pointer-events: none; opacity: 0.08; mix-blend-mode: overlay;
+        background-image: radial-gradient(rgba(255,255,255,.9) 0.7px, transparent 0.8px), radial-gradient(rgba(0,0,0,.9) 0.7px, transparent 0.8px);
+        background-size: 3px 3px, 5px 5px; background-position: 0 0, 1px 2px; }
+      #vignette { z-index: 89; pointer-events: none; background: radial-gradient(ellipse at 50% 45%, transparent 55%, rgba(0,0,0,.28) 100%); }
+      #progress { z-index: 95; inset: auto 0 0 0; height: 10px; overflow: visible; }
+      #progress .bar { position: absolute; left: 0; bottom: 0; height: 6px; width: 100%; background: linear-gradient(90deg, var(--gold-soft), var(--gold)); transform-origin: 0 50%; }
+
+      /* ---------- kinetic ticker (decorative, lower third) ---------- */
+      #ticker { z-index: 80; pointer-events: none; }
+      #ticker .row { position: absolute; left: 0; white-space: nowrap; will-change: transform; }
+      #ticker .row1 { top: 1420px; font-family: var(--sans); font-weight: 800; font-size: 118px; letter-spacing: -1px; text-transform: uppercase; color: transparent; -webkit-text-stroke: 2px rgba(200,164,90,.42); }
+      #ticker .row2 { top: 1580px; font-family: var(--serif); font-style: italic; font-weight: 600; font-size: 104px; color: rgba(200,164,90,.22); }
+      #ticker .row span { margin-right: 46px; }
+      #ticker .row .star { color: rgba(200,164,90,.5); -webkit-text-stroke: 0; font-style: normal; }
+
+      /* ---------- S1 hook: paper card problem ---------- */
+      #s1 { z-index: 10; background: var(--paper); }
+      #s1 .bgtext { position: absolute; left: -40px; top: 120px; font-family: var(--serif); font-style: italic; font-size: 520px; line-height: .8; color: rgba(31,42,28,.035); white-space: nowrap; }
+      #s1 .q { top: 322px; }
+      #s1 .q .t { font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 128px; line-height: 1; color: var(--ink); }
+      #s1 .q .t2 { font-family: var(--sans); font-weight: 700; font-size: 32px; letter-spacing: 6px; color: var(--muted); margin-top: 18px; text-transform: uppercase; }
+      .paper { position: absolute; left: 230px; top: 700px; width: 620px; height: 330px; border-radius: 22px; background: #EFE3C8;
+        box-shadow: 0 30px 60px rgba(60,45,20,.25), inset 0 0 0 2px rgba(120,95,50,.15); transform: rotate(-6deg); }
+      .paper::before { content: ''; position: absolute; inset: 0; border-radius: inherit; background:
+        radial-gradient(circle at 78% 22%, transparent 52px, rgba(120,80,40,.18) 54px, rgba(120,80,40,.08) 62px, transparent 64px),
+        linear-gradient(115deg, transparent 60%, rgba(255,255,255,.35) 61%, transparent 62%); }
+      .paper .ptitle { position: absolute; left: 40px; top: 26px; font-family: var(--serif); font-weight: 600; font-size: 44px; color: #6E5530; letter-spacing: 2px; }
+      .paper .pgrid { position: absolute; left: 50px; right: 50px; bottom: 34px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px 28px; }
+      .paper .pdot { aspect-ratio: 1; border-radius: 50%; border: 4px dashed rgba(110,85,48,.45); }
+      .paper .pdot.inked { border: 6px solid rgba(150,50,40,.55); background: radial-gradient(circle, rgba(150,50,40,.18), transparent 70%); transform: rotate(12deg); }
+      .paper .tear { position: absolute; right: -2px; top: 0; bottom: 0; width: 120px; background: var(--paper); clip-path: polygon(40% 0, 100% 0, 100% 100%, 20% 100%, 60% 84%, 25% 70%, 55% 55%, 30% 40%, 62% 26%, 30% 12%); }
+      #s1 .bad { top: 1065px; gap: 0; }
+      #s1 .bad .row { position: relative; font-family: var(--sans); font-weight: 800; font-size: 72px; line-height: 1.1; letter-spacing: -2px; color: var(--ink); }
+      #s1 .bad .row .strike { position: absolute; left: -12px; right: -12px; top: 52%; height: 10px; border-radius: 5px; background: var(--red); transform-origin: 0 50%; }
+
+      /* ---------- S2 reveal ---------- */
+      #s2 { z-index: 20; background: transparent; }
+      #s2 .center, #s2 .uline, #s6 .center, #s6 .orb, #s6 .btn { z-index: 2; }
+      #s2 .iris { z-index: 0; position: absolute; left: 50%; top: 58%; width: 2600px; height: 2600px; margin: -1300px 0 0 -1300px; border-radius: 50%;
+        background: radial-gradient(circle, #3B5C37 0%, var(--forest) 35%, var(--forest-deep) 70%); transform: scale(0); }
+      #s2 .lead { top: 330px; font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 112px; color: var(--cream); }
+      #s2 .big { top: 480px; }
+      #s2 .big .l { font-family: var(--sans); font-weight: 800; font-size: 148px; line-height: .98; letter-spacing: -3px; color: var(--cream); }
+      #s2 .big .l.gold .ch { background: linear-gradient(180deg, #F8EBC4 0%, var(--gold-soft) 45%, var(--gold) 80%, #A9853E 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+      #s2 .big .l .ch { display: inline-block; }
+      #s2 .uline { position: absolute; left: 240px; right: 240px; top: 800px; height: 6px; border-radius: 3px; background: var(--gold); transform-origin: 0 50%; }
+      #s2 .sub { top: 850px; font-family: var(--sans); font-weight: 700; font-size: 50px; line-height: 1.25; color: var(--gold-soft); letter-spacing: 1px; }
+      #s2 .sub2 { top: 1010px; font-family: var(--sans); font-weight: 500; font-size: 40px; color: rgba(243,235,221,.75); }
+
+      /* ---------- S3 card demo ---------- */
+      #s3 { z-index: 30; background: radial-gradient(ellipse at 50% 40%, #2C4A2A 0%, var(--forest-deep) 70%); }
+      #s3 .head { top: 300px; }
+      #s3 .head .k { font-family: var(--sans); font-weight: 700; font-size: 34px; letter-spacing: 9px; color: var(--gold-soft); text-transform: uppercase; }
+      #s3 .head .h { margin-top: 14px; font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 76px; line-height: 1; color: var(--cream); }
+      #s3 .chip { position: absolute; left: 50%; top: 480px; transform: translateX(-50%); padding: 12px 28px; border-radius: 999px; border: 2px solid rgba(227,204,148,.5); color: var(--gold-soft); font-weight: 700; font-size: 30px; letter-spacing: 1px; white-space: nowrap; }
+      .cardwrap { position: absolute; left: 0; right: 0; top: 560px; height: 550px; transform: scale(.79); transform-origin: 50% 0; }
+      .card3d { position: absolute; left: 100px; top: 0; width: 880px; height: 550px; perspective: 2400px; }
+      .card-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; }
+      .face { position: absolute; inset: 0; border-radius: 34px; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+        background: radial-gradient(120% 140% at 0% 0%, #4A6A41 0%, #2E4A2B 46%, #1F3520 100%);
+        box-shadow: 0 50px 90px rgba(0,0,0,.45), inset 0 0 0 2px rgba(200,164,90,.45), inset 0 2px 0 rgba(255,255,255,.14);
+        display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; color: var(--cream); }
+      .face.back { transform: rotateY(180deg); }
+      .face .leaf { position: absolute; right: -60px; top: -80px; height: 130%; opacity: .1; color: var(--cream); }
+      .face.back .leaf { right: auto; left: -60px; transform: scaleX(-1); }
+      .face .sheen { position: absolute; top: -50%; left: -60%; width: 40%; height: 200%; background: linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent); transform: rotate(18deg); }
+      .brand { position: relative; display: flex; align-items: center; gap: 26px; }
+      .brand img { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(200,164,90,.75); }
+      .brand .div { width: 2px; height: 74px; background: rgba(243,235,221,.55); }
+      .brand .word { display: flex; flex-direction: column; align-items: center; line-height: 1; }
+      .brand .word b { font-family: var(--serif); font-weight: 600; font-size: 70px; letter-spacing: 7px; }
+      .brand .word i { font-style: normal; font-size: 28px; font-weight: 700; letter-spacing: 11px; color: var(--gold-soft); margin-top: 6px; padding-left: 11px; }
+      .thanks { position: relative; display: flex; align-items: center; gap: 18px; width: 90%; font-size: 28px; font-weight: 700; letter-spacing: 3px; white-space: nowrap; }
+      .thanks::before, .thanks::after { content: ''; flex: 1; height: 2px; background: rgba(243,235,221,.5); }
+      .stamps { position: relative; display: grid; grid-template-columns: repeat(5, 92px); gap: 40px 34px; margin-bottom: 18px; }
+      .st { position: relative; width: 92px; height: 92px; border-radius: 50%; background: rgba(246,239,226,.92); color: rgba(46,74,43,.3);
+        display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 0 2px rgba(255,255,255,.5), 0 6px 14px rgba(0,0,0,.2); }
+      .st svg { width: 48%; height: 48%; fill: rgba(46,74,43,.1); stroke: currentColor; stroke-width: 1.5; stroke-linejoin: round; }
+      .st .fill { position: absolute; inset: 0; border-radius: 50%; background: #FBF6EC; box-shadow: 0 0 0 4px var(--gold), 0 10px 22px rgba(0,0,0,.3);
+        display: flex; align-items: center; justify-content: center; color: var(--forest); opacity: 0; transform: scale(.4) rotate(-25deg); }
+      .st .fill svg { fill: rgba(46,74,43,.22); stroke-width: 1.7; }
+      .st .chk { position: absolute; top: -8px; right: -8px; width: 34px; height: 34px; border-radius: 50%; background: var(--gold); color: var(--ink); font-size: 20px; font-weight: 900; display: flex; align-items: center; justify-content: center; }
+      .st .badge { position: absolute; bottom: -26px; left: 50%; transform: translateX(-50%); padding: 2px 12px; border-radius: 999px; background: var(--gold); color: var(--ink); font-size: 28px; line-height: 1.15; font-weight: 800; letter-spacing: .5px; z-index: 2; white-space: nowrap; box-shadow: 0 4px 10px rgba(0,0,0,.25); }
+      .qrbox { position: relative; background: #fff; padding: 22px; border-radius: 28px; box-shadow: 0 20px 40px rgba(0,0,0,.35); line-height: 0; }
+      .qrbox svg { width: 300px; height: 300px; display: block; }
+      #s3 .counter { position: absolute; left: 0; right: 0; top: 1050px; height: 90px; text-align: center; }
+      #s3 .counter .c { font-weight: 700; font-size: 50px; color: var(--cream); }
+      #s3 .counter .c b { color: var(--gold-soft); }
+      #s3 .reward { top: 1040px; }
+      #s3 .reward .r1 { font-family: var(--sans); font-weight: 800; font-size: 64px; color: var(--cream); letter-spacing: -1px; }
+      #s3 .reward .r2 { font-family: var(--serif); font-style: italic; font-weight: 600; font-size: 84px; color: var(--gold-soft); line-height: 1; }
+      #s3 .scan { top: 1045px; }
+      #s3 .scan .s1 { font-family: var(--sans); font-weight: 800; font-size: 58px; line-height: 1.15; color: var(--cream); letter-spacing: -1px; }
+      #s3 .scan .s1 .g { color: var(--gold-soft); }
+
+      /* ---------- S4 features ---------- */
+      #s4 { z-index: 40; background: var(--paper); }
+      #s4 .panel { position: absolute; inset: 0; background: var(--paper); transform-origin: 50% 100%; }
+      #s4 .rail { position: absolute; left: 130px; top: 320px; bottom: 680px; width: 4px; background: rgba(46,74,43,.12); border-radius: 2px; }
+      #s4 .rail .fillr { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: var(--forest); transform-origin: 50% 0; border-radius: 2px; }
+      .feat { position: absolute; left: 192px; right: 192px; top: 345px; }
+      .feat .num { font-family: var(--serif); font-style: italic; font-weight: 600; font-size: 128px; line-height: 1; color: #9C7A35; }
+      .feat .ic { position: absolute; right: 0; top: 0; width: 150px; height: 150px; border-radius: 50%; background: rgba(46,74,43,.08); display: flex; align-items: center; justify-content: center; }
+      .feat .ic svg { width: 80px; height: 80px; fill: none; stroke: var(--forest); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+      .feat .ic svg * { stroke-dasharray: 1; stroke-dashoffset: 1; }
+      .feat .ttl { margin-top: 26px; font-family: var(--sans); font-weight: 800; font-size: 76px; line-height: 1.06; letter-spacing: -2px; color: var(--ink); }
+      .feat .ttl .acc { color: var(--forest); }
+      .feat .dsc { margin-top: 30px; font-family: var(--sans); font-weight: 500; font-size: 42px; line-height: 1.35; color: var(--muted); }
+      .feat .bar { margin-top: 36px; width: 240px; height: 8px; border-radius: 4px; background: var(--gold); transform-origin: 0 50%; }
+
+      /* ---------- S5 benefit ---------- */
+      #s5 { z-index: 50; background: var(--forest-deep); }
+      #s5 .panel { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, #2C4A2A 0%, var(--forest-deep) 72%); transform-origin: 50% 100%; }
+      #s5 .stack { top: 330px; }
+      #s5 .stack .a { font-family: var(--sans); font-weight: 800; font-size: 118px; line-height: 1.02; letter-spacing: -3px; color: var(--cream); }
+      #s5 .stack .b { font-family: var(--serif); font-style: italic; font-weight: 600; font-size: 210px; line-height: .92; color: var(--gold-soft); }
+      #s5 .line { top: 840px; font-family: var(--sans); font-weight: 600; font-size: 42px; line-height: 1.4; color: rgba(243,235,221,.8); }
+      #s5 .ring { position: absolute; left: 50%; top: 620px; width: 980px; height: 980px; margin: -490px 0 0 -490px; border-radius: 50%; border: 2px solid rgba(227,204,148,.18); transform: scale(.6); opacity: 0; }
+
+      /* ---------- S6 CTA ---------- */
+      #s6 { z-index: 60; background: transparent; }
+      #s6 .iris { z-index: 0; position: absolute; left: 50%; top: 50%; width: 2600px; height: 2600px; margin: -1300px 0 0 -1300px; border-radius: 50%;
+        background: radial-gradient(circle at 50% 50%, #4F4D16 0%, var(--olive) 40%, #2C2B09 100%); transform: scale(0); }
+      #s6 .orb { position: absolute; left: 50%; top: 300px; width: 290px; height: 290px; margin-left: -145px; }
+      #s6 .orb img { position: absolute; inset: 26px; width: 238px; height: 238px; border-radius: 50%; object-fit: cover; box-shadow: 0 24px 50px rgba(0,0,0,.35), 0 0 0 2px rgba(227,204,148,.6); }
+      #s6 .orb svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); overflow: visible; }
+      #s6 .orb .trk { fill: none; stroke: rgba(243,235,221,.15); stroke-width: 3; }
+      #s6 .orb .prg { fill: none; stroke: url(#ctaGrad); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 100; stroke-dashoffset: 100; }
+      #s6 .msg { top: 630px; }
+      #s6 .msg .m1 { font-family: var(--sans); font-weight: 800; font-size: 80px; line-height: 1.02; letter-spacing: -3px; color: var(--cream); }
+      #s6 .msg .m2 { font-family: var(--serif); font-style: italic; font-weight: 600; font-size: 116px; line-height: 1; color: var(--gold-soft); }
+      #s6 .btn { position: absolute; left: 50%; top: 975px; transform: translateX(-50%); padding: 28px 52px; border-radius: 999px; overflow: hidden;
+        background: linear-gradient(135deg, #F6E7BC, var(--gold) 60%, #A9853E); color: #26250A; font-weight: 800; font-size: 40px; letter-spacing: .3px; white-space: nowrap; box-shadow: 0 20px 44px rgba(0,0,0,.35); }
+      #s6 .btn .shine { position: absolute; top: 0; left: 0; width: 30%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent); transform: skewX(-20deg); }
+      #s6 .fine { top: 1115px; font-weight: 600; font-size: 34px; letter-spacing: 1px; color: rgba(243,235,221,.7); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="35.5" data-width="1080" data-height="1920">
+
+      <!-- ===== S1 · Hook (0 – 4.4s) ===== -->
+      <section id="s1" class="clip" data-start="0" data-duration="4.4" data-track-index="0">
+        <div class="bgtext" aria-hidden="true" data-layout-ignore>kertas</div>
+        <div class="center q">
+          <div class="t" data-split>Kad cap kertas?</div>
+          <div class="t2" data-split>Masih guna cara lama</div>
+        </div>
+        <div class="paper" id="paper" data-layout-ignore>
+          <div class="ptitle">KAD CAP ☕</div>
+          <div class="pgrid">
+            <div class="pdot inked"></div><div class="pdot inked"></div><div class="pdot inked"></div><div class="pdot"></div><div class="pdot"></div>
+            <div class="pdot"></div><div class="pdot"></div><div class="pdot"></div><div class="pdot"></div><div class="pdot"></div>
+          </div>
+          <div class="tear"></div>
+        </div>
+        <div class="center bad">
+          <div class="row" id="bad1">Hilang.<span class="strike"></span></div>
+          <div class="row" id="bad2">Lupa bawa.<span class="strike"></span></div>
+          <div class="row" id="bad3">Koyak.<span class="strike"></span></div>
+        </div>
+      </section>
+
+      <!-- ===== S2 · Reveal (4.0 – 8.2s) ===== -->
+      <section id="s2" class="clip" data-start="4" data-duration="4.2" data-track-index="1">
+        <div class="iris"></div>
+        <div class="center lead" data-split>Masa untuk</div>
+        <div class="center big">
+          <div class="l" data-chars>LOYALTY</div>
+          <div class="l gold" data-chars>DIGITAL</div>
+        </div>
+        <div class="uline"></div>
+        <div class="center sub" data-split>Kemas. Menarik. Ikut jenama anda.</div>
+        <div class="center sub2" data-split>Terus dalam telefon pelanggan.</div>
+      </section>
+
+      <!-- ===== S3 · Card demo (8.0 – 14.6s) ===== -->
+      <section id="s3" class="clip" data-start="8" data-duration="6.6" data-track-index="2">
+        <div class="center head">
+          <div class="k" data-split>Kad kesetiaan digital</div>
+          <div class="h" data-split>Cap terkumpul sendiri</div>
+        </div>
+        <div class="chip">Contoh: <span id="shopNameEl">Selagi Coffee</span></div>
+        <div class="cardwrap" data-layout-ignore><div class="card3d">
+          <div class="card-inner" id="cardInner">
+            <div class="face front">
+              <svg class="leaf" viewBox="0 0 120 200" fill="currentColor"><path d="M62 196c-6-40-2-82 14-122 9-22 22-42 38-60l3 3c-16 18-28 37-37 59-15 38-19 79-13 119z"/><ellipse cx="96" cy="38" rx="10" ry="22" transform="rotate(35 96 38)"/><ellipse cx="72" cy="74" rx="11" ry="24" transform="rotate(-30 72 74)"/><ellipse cx="102" cy="88" rx="9" ry="20" transform="rotate(50 102 88)"/><ellipse cx="58" cy="122" rx="11" ry="24" transform="rotate(-38 58 122)"/><ellipse cx="88" cy="140" rx="9" ry="19" transform="rotate(40 88 140)"/></svg>
+              <div class="sheen" id="sheenF"></div>
+              <div class="brand"><img src="assets/logo.png" alt=""><span class="div"></span><div class="word"><b>SELAGI</b><i>COFFEE</i></div></div>
+              <div class="thanks">THANK YOU FOR YOUR LOYALTY</div>
+              <div class="stamps" id="stamps"></div>
+            </div>
+            <div class="face back">
+              <svg class="leaf" viewBox="0 0 120 200" fill="currentColor"><path d="M62 196c-6-40-2-82 14-122 9-22 22-42 38-60l3 3c-16 18-28 37-37 59-15 38-19 79-13 119z"/><ellipse cx="96" cy="38" rx="10" ry="22" transform="rotate(35 96 38)"/><ellipse cx="72" cy="74" rx="11" ry="24" transform="rotate(-30 72 74)"/><ellipse cx="102" cy="88" rx="9" ry="20" transform="rotate(50 102 88)"/><ellipse cx="58" cy="122" rx="11" ry="24" transform="rotate(-38 58 122)"/></svg>
+              <div class="qrbox"><svg id="qr" viewBox="0 0 29 29" shape-rendering="crispEdges"></svg></div>
+            </div>
+          </div>
+        </div></div>
+        <div class="counter" id="counter"></div>
+        <div class="center reward" data-layout-allow-overlap>
+          <div class="r1" data-split>10 cap =</div>
+          <div class="r2" data-split>kopi percuma</div>
+        </div>
+        <div class="center scan" data-layout-allow-overlap>
+          <div class="s1"><span data-split>Tunjuk QR.</span><br><span class="g" data-split>Cashier scan. Siap.</span></div>
+        </div>
+      </section>
+
+      <!-- ===== S4 · Features (14.4 – 26.9s) ===== -->
+      <section id="s4" class="clip" data-start="14.4" data-duration="12.5" data-track-index="3">
+        <div class="panel"></div>
+        <div class="rail"><div class="fillr"></div></div>
+
+        <div class="feat" id="f1">
+          <div class="num">01</div>
+          <div class="ic"><svg viewBox="0 0 48 48"><circle pathLength="1" cx="24" cy="24" r="18"/><path pathLength="1" d="M16 25l6 6 11-13"/></svg></div>
+          <div class="ttl"><span data-split>Cap &amp; point</span><br><span class="acc" data-split>automatik</span></div>
+          <div class="dsc" data-split>Scan QR, cap terus masuk.</div>
+          <div class="bar"></div>
+        </div>
+        <div class="feat" id="f2">
+          <div class="num">02</div>
+          <div class="ic"><svg viewBox="0 0 48 48"><path pathLength="1" d="M24 5l15 6v11c0 10-6 17-15 21C15 39 9 32 9 22V11z"/><path pathLength="1" d="M18 24l4 4 8-9"/></svg></div>
+          <div class="ttl"><span data-split>Tuntut ganjaran</span><br><span class="acc" data-split>dengan PIN</span></div>
+          <div class="dsc" data-split>Staf sahkan. Sekali tuntut sahaja.</div>
+          <div class="bar"></div>
+        </div>
+        <div class="feat" id="f3">
+          <div class="num">03</div>
+          <div class="ic"><svg viewBox="0 0 48 48"><path pathLength="1" d="M12 33h24l-3-5V20a9 9 0 0 0-18 0v8z"/><path pathLength="1" d="M20 38a4 4 0 0 0 8 0"/></svg></div>
+          <div class="ttl"><span data-split>Notifikasi</span><br><span class="acc" data-split>terus ke telefon</span></div>
+          <div class="dsc" data-split>Sampai walaupun app ditutup.</div>
+          <div class="bar"></div>
+        </div>
+        <div class="feat" id="f4">
+          <div class="num">04</div>
+          <div class="ic"><svg viewBox="0 0 48 48"><rect pathLength="1" x="14" y="5" width="20" height="38" rx="4"/><path pathLength="1" d="M24 14v14M18 23l6 6 6-6"/></svg></div>
+          <div class="ttl"><span data-split>Pasang tanpa</span><br><span class="acc" data-split>App Store</span></div>
+          <div class="dsc" data-split>Satu klik. Android &amp; iPhone.</div>
+          <div class="bar"></div>
+        </div>
+      </section>
+
+      <!-- ===== S5 · Benefit (26.7 – 30.5s) ===== -->
+      <section id="s5" class="clip" data-start="26.7" data-duration="3.8" data-track-index="4">
+        <div class="panel"></div>
+        <div class="ring" id="ring1"></div>
+        <div class="ring" id="ring2"></div>
+        <div class="center stack">
+          <div class="a" data-split>Pelanggan</div>
+          <div class="a" data-split>datang</div>
+          <div class="b" data-split>balik.</div>
+        </div>
+        <div class="center line">
+          <span data-split>Setiap cap tersimpan.</span>
+          <span data-split>Setiap ganjaran dituntut.</span>
+        </div>
+      </section>
+
+      <!-- ===== S6 · CTA (30.3 – 35.5s) ===== -->
+      <section id="s6" class="clip" data-start="30.3" data-duration="5.2" data-track-index="5">
+        <div class="iris"></div>
+        <div class="orb">
+          <svg viewBox="0 0 120 120"><defs><linearGradient id="ctaGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F6E7BC"/><stop offset="1" stop-color="#C8A45A"/></linearGradient></defs>
+            <circle class="trk" cx="60" cy="60" r="57"/><circle class="prg" id="ctaRing" cx="60" cy="60" r="57" pathLength="100"/></svg>
+          <img src="assets/logo.png" alt="">
+        </div>
+        <div class="center msg">
+          <div class="m1" data-split>Jom digitalkan</div>
+          <div class="m1" data-split>kad kesetiaan</div>
+          <div class="m2" data-split>kedai anda.</div>
+        </div>
+        <div class="btn" id="ctaBtn"><span id="ctaText">Hubungi kami untuk demo</span><span class="shine"></span></div>
+        <div class="center fine" data-split>Reka ikut jenama · Android &amp; iPhone</div>
+      </section>
+
+      <!-- ===== kinetic ticker (4s → end, decorative) ===== -->
+      <div id="ticker" class="clip" data-start="4" data-duration="31.5" data-track-index="6" aria-hidden="true" data-layout-ignore>
+        <div class="row row1" id="tick1"></div>
+        <div class="row row2" id="tick2"></div>
+      </div>
+
+      <!-- ===== soundtrack (synthesised: music bed + SFX timed to the visuals) ===== -->
+      <audio id="soundtrack" src="assets/audio/soundtrack.mp3" data-start="0" data-duration="35.5" data-volume="1.25" data-track-index="10"></audio>
+
+      <!-- ===== global overlays ===== -->
+      <div id="vignette" class="clip" data-start="0" data-duration="35.5" data-track-index="7"></div>
+      <div id="grain" class="clip" data-start="0" data-duration="35.5" data-track-index="8"></div>
+      <div id="progress" class="clip" data-start="0" data-duration="35.5" data-track-index="9"><div class="bar"></div></div>
+    </div>
+
+    <script>
+      /* ---------- variables (override at render: --variables '{"cta":"WhatsApp 01X-XXX XXXX"}') ---------- */
+      (function () {
+        var v = (window.__hyperframes && window.__hyperframes.getVariables) ? window.__hyperframes.getVariables() : {};
+        if (v.cta) document.getElementById('ctaText').textContent = v.cta;
+        if (v.shopName) document.getElementById('shopNameEl').textContent = v.shopName;
+      })();
+
+      /* ---------- deterministic DOM builders ---------- */
+      function splitWords(el) {
+        var words = el.textContent.trim().split(/\s+/);
+        el.innerHTML = words.map(function (w) { return '<span class="w"><span class="wi">' + w.replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</span></span>'; }).join(' ');
+      }
+      document.querySelectorAll('[data-split]').forEach(splitWords);
+      document.querySelectorAll('[data-chars]').forEach(function (el) {
+        el.innerHTML = el.textContent.trim().split('').map(function (c) { return '<span class="w"><span class="wi ch">' + c + '</span></span>'; }).join('');
+      });
+
+      (function () {
+        var a = ['Loyalty digital', 'Cap', 'Point', 'Ganjaran', 'QR', 'Notifikasi'];
+        var b = ['kemas', 'menarik', 'ikut jenama anda', 'pelanggan setia'];
+        function build(words, reps) { var h = ''; for (var r = 0; r < reps; r++) words.forEach(function (w) { h += '<span>' + w + '</span><span class="star">✦</span>'; }); return h; }
+        document.getElementById('tick1').innerHTML = build(a, 6);
+        document.getElementById('tick2').innerHTML = build(b, 8);
+      })();
+
+      var CUP = '<svg viewBox="0 0 24 24"><path d="M5.5 4.5h13l-.6 2.5H6.1z"/><path d="M6.6 8h10.8l-1.5 11.6a1.2 1.2 0 0 1-1.2 1H9.3a1.2 1.2 0 0 1-1.2-1z"/></svg>';
+      var stampsEl = document.getElementById('stamps');
+      for (var i = 1; i <= 10; i++) {
+        var badge = i === 5 ? '<span class="badge">RM3</span>' : (i === 10 ? '<span class="badge">FREE</span>' : '');
+        stampsEl.insertAdjacentHTML('beforeend', '<div class="st">' + CUP + '<div class="fill">' + CUP + '<span class="chk">✓</span></div>' + badge + '</div>');
+      }
+      document.getElementById('counter').innerHTML = '<div class="c">Setiap beli = <b>1 cap</b></div>';
+
+      // QR-style pattern from a fixed seed (decorative, deterministic)
+      (function () {
+        var N = 29, seed = 20261115, cells = '';
+        function rnd() { seed = (seed * 1103515245 + 12345) % 2147483648; return seed / 2147483648; }
+        function finder(x, y) {
+          return '<rect x="' + x + '" y="' + y + '" width="7" height="7"/><rect x="' + (x + 1) + '" y="' + (y + 1) + '" width="5" height="5" fill="#fff"/><rect x="' + (x + 2) + '" y="' + (y + 2) + '" width="3" height="3"/>';
+        }
+        for (var y = 0; y < N; y++) for (var x = 0; x < N; x++) {
+          var inF = (x < 8 && y < 8) || (x > N - 9 && y < 8) || (x < 8 && y > N - 9);
+          if (!inF && rnd() < 0.48) cells += '<rect x="' + x + '" y="' + y + '" width="1" height="1"/>';
+        }
+        document.getElementById('qr').innerHTML = '<g fill="#1F2A1C">' + cells + finder(0, 0) + finder(N - 7, 0) + finder(0, N - 7) + '</g>';
+      })();
+
+      /* ---------- timeline ---------- */
+      var tl = gsap.timeline({ paused: true });
+      var E = 'power4.out', E2 = 'expo.out', IN = 'power3.in';
+      function words(sel) { return gsap.utils.toArray(sel + ' .wi'); }
+      function rise(sel, t, opt) {
+        opt = opt || {};
+        tl.fromTo(words(sel), { yPercent: 115, rotation: opt.rot || 4, autoAlpha: 0 }, { yPercent: 0, rotation: 0, autoAlpha: 1, duration: opt.d || 0.7, ease: opt.ease || E, stagger: opt.st == null ? 0.07 : opt.st }, t);
+      }
+      function sink(sel, t, d) { tl.to(words(sel), { yPercent: -115, duration: d || 0.45, ease: IN, stagger: 0.025 }, t); }
+
+      // progress line across the whole film
+      tl.fromTo('#progress .bar', { scaleX: 0 }, { scaleX: 1, duration: 35.5, ease: 'none' }, 0);
+
+      /* kinetic ticker */
+      tl.fromTo('#ticker .row', { opacity: 0 }, { opacity: 1, duration: 0.8, ease: 'power2.out' }, 4.9);
+      tl.fromTo('#tick1', { x: 0 }, { x: -2600, duration: 31.5, ease: 'none' }, 4.0);
+      tl.fromTo('#tick2', { x: -2400 }, { x: 0, duration: 31.5, ease: 'none' }, 4.0);
+      tl.to('#ticker .row', { opacity: 0, duration: 0.6, ease: 'power2.in' }, 34.6);
+
+      /* S1 · hook */
+      tl.fromTo('#s1 .bgtext', { xPercent: 8 }, { xPercent: -14, duration: 4.4, ease: 'none' }, 0);
+      rise('#s1 .q .t', 0.15, { d: 0.8, st: 0.09 });
+      rise('#s1 .q .t2', 0.55, { d: 0.6, st: 0.05, rot: 0 });
+      tl.fromTo('#paper', { y: 260, rotation: -16, opacity: 0 }, { y: 0, rotation: -6, opacity: 1, duration: 0.9, ease: 'back.out(1.4)' }, 0.35);
+      ['#bad1', '#bad2', '#bad3'].forEach(function (id, k) {
+        var t = 1.45 + k * 0.55;
+        tl.fromTo(id, { scale: 1.35, opacity: 0, y: 30 }, { scale: 1, opacity: 1, y: 0, duration: 0.35, ease: 'back.out(2.2)' }, t);
+        tl.fromTo(id + ' .strike', { scaleX: 0 }, { scaleX: 1, duration: 0.28, ease: 'power2.inOut' }, t + 0.28);
+        tl.to(id, { color: '#7E8175', duration: 0.25 }, t + 0.32);
+        tl.fromTo('#paper', { x: 0 }, { x: k % 2 ? 14 : -14, duration: 0.06, yoyo: true, repeat: 3, ease: 'none' }, t);
+      });
+      tl.to('#paper', { y: 900, rotation: 18, duration: 0.8, ease: IN }, 3.35);
+      tl.to('#s1 .bad .row', { opacity: 0, y: -40, duration: 0.4, ease: IN, stagger: 0.05 }, 3.5);
+      sink('#s1 .q .t', 3.55); sink('#s1 .q .t2', 3.55);
+
+      /* S2 · reveal */
+      tl.fromTo('#s2 .iris', { scale: 0 }, { scale: 1, duration: 0.9, ease: 'power3.inOut' }, 4.0);
+      rise('#s2 .lead', 4.7, { d: 0.7 });
+      tl.fromTo(gsap.utils.toArray('#s2 .big .l:first-child .wi'), { yPercent: 110 }, { yPercent: 0, duration: 0.65, ease: E2, stagger: 0.045 }, 4.95);
+      tl.fromTo(gsap.utils.toArray('#s2 .big .l.gold .wi'), { yPercent: 110 }, { yPercent: 0, duration: 0.65, ease: E2, stagger: 0.045 }, 5.2);
+      tl.fromTo('#s2 .big', { scale: 1.08 }, { scale: 1, duration: 2.6, ease: 'power2.out' }, 4.95);
+      tl.fromTo('#s2 .uline', { scaleX: 0 }, { scaleX: 1, duration: 0.7, ease: 'power3.inOut' }, 5.75);
+      rise('#s2 .sub', 6.05, { d: 0.55, st: 0.08, rot: 0 });
+      rise('#s2 .sub2', 6.45, { d: 0.55, st: 0.05, rot: 0 });
+      tl.to('#s2 .lead, #s2 .big, #s2 .uline, #s2 .sub, #s2 .sub2', { y: -120, opacity: 0, duration: 0.5, ease: IN, stagger: 0.03 }, 7.6);
+
+      /* S3 · card */
+      tl.fromTo('#s3', { yPercent: 100 }, { yPercent: 0, duration: 0.7, ease: 'power3.inOut' }, 8.0);
+      rise('#s3 .head .k', 8.55, { d: 0.5, st: 0.05, rot: 0 });
+      rise('#s3 .head .h', 8.65, { d: 0.75 });
+      tl.fromTo('#s3 .chip', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: E }, 8.9);
+      tl.fromTo('.card3d', { y: 420, rotationX: 28, opacity: 0 }, { y: 0, rotationX: 0, opacity: 1, duration: 1.0, ease: E2 }, 8.55);
+      tl.fromTo('#sheenF', { xPercent: 0 }, { xPercent: 520, duration: 1.4, ease: 'power2.inOut' }, 9.4);
+      var fills = gsap.utils.toArray('#stamps .st .fill');
+      fills.forEach(function (f, k) {
+        var t = 9.35 + k * 0.17;
+        tl.to(f, { opacity: 1, scale: 1, rotation: 0, duration: 0.35, ease: 'back.out(2.4)' }, t);
+      });
+      tl.fromTo('#counter', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: E }, 9.2);
+      tl.to('#counter', { opacity: 0, duration: 0.25 }, 11.25);
+      rise('#s3 .reward .r1', 11.25, { d: 0.5, st: 0.06, rot: 0 });
+      rise('#s3 .reward .r2', 11.4, { d: 0.65 });
+      tl.to('.card3d', { scale: 1.03, duration: 0.25, yoyo: true, repeat: 1, ease: 'power2.out' }, 11.1);
+      sink('#s3 .reward .r1', 12.2, 0.35); sink('#s3 .reward .r2', 12.2, 0.35);
+      tl.to('#cardInner', { rotationY: 180, duration: 1.0, ease: 'power3.inOut' }, 12.25);
+      tl.to('.card3d', { y: -30, duration: 0.5, yoyo: true, repeat: 1, ease: 'sine.inOut' }, 12.25);
+      rise('#s3 .scan .s1 > span:first-child', 12.95, { d: 0.55, rot: 0 });
+      rise('#s3 .scan .s1 .g', 13.15, { d: 0.55, st: 0.06, rot: 0 });
+
+      /* S4 · features */
+      tl.fromTo('#s4 .panel', { scaleY: 0 }, { scaleY: 1, duration: 0.6, ease: 'power3.inOut' }, 14.4);
+      tl.fromTo('#s4', { backgroundColor: 'rgba(251,247,240,0)' }, { backgroundColor: 'rgba(251,247,240,1)', duration: 0.01 }, 14.95);
+      tl.fromTo('#s4 .rail .fillr', { scaleY: 0 }, { scaleY: 1, duration: 11.4, ease: 'none' }, 15.0);
+      ['#f1', '#f2', '#f3', '#f4'].forEach(function (id, k) {
+        var t = 14.85 + k * 3.0;
+        tl.set(id, { opacity: 1 }, t);
+        tl.fromTo(id + ' .num', { yPercent: 60, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.6, ease: E }, t);
+        tl.fromTo(id + ' .ic', { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.6, ease: 'back.out(2)' }, t + 0.05);
+        tl.to(id + ' .ic svg *', { strokeDashoffset: 0, duration: 0.8, ease: 'power2.inOut', stagger: 0.15 }, t + 0.2);
+        rise(id + ' .ttl', t + 0.1, { d: 0.65, st: 0.08 });
+        rise(id + ' .dsc', t + 0.55, { d: 0.5, st: 0.025, rot: 0 });
+        tl.fromTo(id + ' .bar', { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: 'power3.inOut' }, t + 0.7);
+        if (k < 3) tl.to(id, { yPercent: -18, opacity: 0, duration: 0.4, ease: IN }, t + 2.6);
+      });
+      ['#f1', '#f2', '#f3', '#f4'].forEach(function (id) { tl.set(id, { opacity: 0 }, 14.4); });
+      tl.to('#f4', { yPercent: -18, opacity: 0, duration: 0.4, ease: IN }, 26.3);
+
+      /* S5 · benefit */
+      tl.fromTo('#s5 .panel', { scaleY: 0 }, { scaleY: 1, duration: 0.6, ease: 'power3.inOut' }, 26.7);
+      tl.fromTo('#s5', { backgroundColor: 'rgba(27,46,28,0)' }, { backgroundColor: 'rgba(27,46,28,1)', duration: 0.01 }, 27.25);
+      tl.fromTo('#ring1', { scale: 0.5, opacity: 0 }, { scale: 1.15, opacity: 1, duration: 3.2, ease: 'power2.out' }, 27);
+      tl.fromTo('#ring2', { scale: 0.3, opacity: 0 }, { scale: 0.85, opacity: 0.7, duration: 3.2, ease: 'power2.out' }, 27.2);
+      var stackRows = gsap.utils.toArray('#s5 .stack > div');
+      stackRows.forEach(function (row, k) {
+        tl.fromTo(row.querySelectorAll('.wi'), { yPercent: 115, rotation: 5 }, { yPercent: 0, rotation: 0, duration: 0.7, ease: E2 }, 27.15 + k * 0.32);
+      });
+      tl.fromTo('#s5 .stack .b', { scale: 0.85 }, { scale: 1, duration: 1.4, ease: 'elastic.out(1, 0.55)' }, 27.8);
+      rise('#s5 .line > span:first-child', 28.5, { d: 0.55, st: 0.05, rot: 0 });
+      rise('#s5 .line > span:last-child', 28.75, { d: 0.55, st: 0.05, rot: 0 });
+
+      /* S6 · CTA */
+      tl.fromTo('#s6 .iris', { scale: 0 }, { scale: 1, duration: 0.9, ease: 'power3.inOut' }, 30.3);
+      tl.fromTo('#s6 .orb', { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.8, ease: E2 }, 30.75);
+      tl.to('#ctaRing', { strokeDashoffset: 0, duration: 1.4, ease: 'power2.inOut' }, 30.9);
+      tl.to('#s6 .orb', { scale: 1.05, duration: 0.25, yoyo: true, repeat: 1, ease: 'power2.out' }, 32.3);
+      gsap.utils.toArray('#s6 .msg > div').forEach(function (row, k) {
+        tl.fromTo(row.querySelectorAll('.wi'), { yPercent: 115, rotation: 4 }, { yPercent: 0, rotation: 0, duration: 0.7, ease: E2, stagger: 0.07 }, 31.3 + k * 0.28);
+      });
+      tl.fromTo('#ctaBtn', { y: 60, opacity: 0, scale: 0.9 }, { y: 0, opacity: 1, scale: 1, duration: 0.7, ease: 'back.out(1.8)' }, 32.4);
+      tl.fromTo('#ctaBtn .shine', { xPercent: -150 }, { xPercent: 450, duration: 1.0, ease: 'power2.inOut' }, 33.2);
+      tl.fromTo('#ctaBtn .shine', { xPercent: -150 }, { xPercent: 450, duration: 1.0, ease: 'power2.inOut', immediateRender: false }, 34.3);
+      rise('#s6 .fine', 32.8, { d: 0.5, st: 0.05, rot: 0 });
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
