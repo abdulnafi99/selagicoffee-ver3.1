@@ -46,7 +46,7 @@ messaging.onBackgroundMessage((payload) => {
         renotify: true,
         requireInteraction: false,
         data: {
-            url: data.url || self.location.origin
+            url: data.url || new URL('./', self.location.href).href
         }
     };
 
@@ -58,10 +58,13 @@ messaging.onBackgroundMessage((payload) => {
 // BILA USER KLIK NOTIFIKASI — buka / fokus app
 // ============================================================
 self.addEventListener('notificationclick', (event) => {
+    // Notifications shown automatically by the FCM SDK carry FCM_MSG and are
+    // opened by the SDK itself (using fcmOptions.link) — avoid opening twice.
+    if (event.notification.data && event.notification.data.FCM_MSG) return;
     event.notification.close();
 
-    const targetUrl = (event.notification.data && event.notification.data.url) ||
-                      self.location.origin;
+    const APP_ROOT = new URL('./', self.location.href).href;
+    const targetUrl = (event.notification.data && event.notification.data.url) || APP_ROOT;
 
     event.waitUntil(
         clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {

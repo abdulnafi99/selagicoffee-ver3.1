@@ -13,6 +13,7 @@
         "tempPasswordSetAt":  { ".validate": "newData.isString()" },
         "passwordChangedAt":  { ".validate": "newData.isString()" },
         "fcmToken": { ".validate": "newData.isString()" },
+        "lastBirthdayPush": { ".validate": "newData.isString()" },
         "stampClaims": {
           "$claimId": {
             ".validate": "newData.hasChildren(['milestone','cycle','status','createdAt']) && (newData.child('milestone').val() == 5 || newData.child('milestone').val() == 10) && (newData.child('status').val() == 'pending' || newData.child('status').val() == 'claimed') && !(data.child('status').val() == 'claimed' && newData.child('status').val() != 'claimed')"
@@ -54,6 +55,7 @@
     },
 
     "pushTokens": {
+      ".indexOn": ["phone"],
       "$token": {
         ".write": "auth != null || (auth == null && newData.child('token').val() == $token)",
         ".validate": "newData.hasChildren(['token','updatedAt'])"

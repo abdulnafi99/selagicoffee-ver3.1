@@ -3809,7 +3809,15 @@
         } catch (e) { console.warn('System notification error:', e); }
     }
 
+    /* In-app alert + FCM push for the same event share a tag → show it once. */
+    const recentNotifTags = new Map();
     function notify(title, body, tag, url) {
+        if (tag) {
+            const now = Date.now();
+            for (const [k, t] of recentNotifTags) if (now - t > 120000) recentNotifTags.delete(k);
+            if (recentNotifTags.has(tag)) return;
+            recentNotifTags.set(tag, now);
+        }
         window.showNotifToast(title, body);
         fireSystemNotification(title, body, tag, url);
     }
@@ -3927,7 +3935,7 @@
             if (lastPoints === null) { lastPoints = pts; return; }
             if (pts > lastPoints) {
                 const diff = pts - lastPoints;
-                notify('⭐ Point Ditambah!', '+' + diff + ' PTS — Jumlah terkini anda ' + pts + ' PTS. Terima kasih! ☕', 'points-' + Date.now(), location.href);
+                notify('⭐ Point Ditambah!', '+' + diff + ' PTS — Jumlah terkini anda ' + pts + ' PTS. Terima kasih! ☕', 'points-' + pts, location.href);
             }
             lastPoints = pts;
         });
