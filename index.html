@@ -1725,7 +1725,11 @@
         /* Icons & manifest are static files: manifest.webmanifest + icons/ */
 
         if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {
-            window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js', { scope: './' }).catch(function () {}); });
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('sw.js', { scope: './', updateViaCache: 'none' })
+                    .then(function (reg) { if (reg && reg.update) setInterval(function () { reg.update().catch(function () {}); }, 60 * 60 * 1000); })
+                    .catch(function (e) { console.warn('SW register failed:', e); });
+            });
         }
 
         var ua = navigator.userAgent || '';
