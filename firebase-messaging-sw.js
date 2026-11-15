@@ -18,7 +18,7 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-const ICON_URL = new URL('logo.jpg', self.location.href).href;
+const ICON_URL = new URL('icons/icon-192.png', self.location.href).href;
 
 // ============================================================
 // NOTIFIKASI BACKGROUND (bila app TERTUTUP / di belakang)

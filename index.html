@@ -5,16 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Selagi Coffee - Kad Kesetiaan & Point</title>
     <meta name="description" content="Kad kesetiaan digital Selagi Coffee — kumpul cap, kumpul point, tebus ganjaran eksklusif.">
-    <meta name="theme-color" content="#FBF7F0">
+    <meta name="theme-color" content="#44420F" id="metaThemeColor">
     <meta name="color-scheme" content="light">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Selagi Coffee">
     <meta name="application-name" content="Selagi Coffee">
-    <meta name="msapplication-TileColor" content="#FFFFFF">
-    <link rel="apple-touch-icon" href="logo.jpg">
-    <link rel="icon" type="image/jpeg" href="logo.jpg">
+    <meta name="msapplication-TileColor" content="#44420F">
+    <meta name="msapplication-TileImage" content="icons/icon-192.png">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="icons/favicon-48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+    <link rel="preload" as="image" href="icons/splash-logo.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -737,19 +742,22 @@
         .notif-toast .nt-close { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.8rem; padding: 2px; flex-shrink: 0; }
 
         /* splash */
-        #splashScreen { position: fixed; inset: 0; z-index: 99999; background: radial-gradient(circle at 50% 42%, #FFFFFF 0%, #F6F0E4 60%, #E7DDC9 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; transition: opacity 0.8s var(--ease), visibility 0.8s ease; opacity: 1; visibility: visible; }
+        #splashScreen { position: fixed; inset: 0; z-index: 99999; background: #44420F; background-image: radial-gradient(circle at 50% 46%, #44420F 0%, #44420F 38%, #2F2D09 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); transition: opacity 0.8s var(--ease), visibility 0.8s ease; opacity: 1; visibility: visible; }
         #splashScreen.hide { opacity: 0; visibility: hidden; pointer-events: none; }
-        #splashScreen .splash-logo-wrap { position: relative; width: 130px; height: 130px; display: flex; align-items: center; justify-content: center; }
-        #splashScreen .splash-logo-wrap::before, #splashScreen .splash-logo-wrap::after { content: ''; position: absolute; inset: 0; border-radius: 50%; border: 1px solid rgba(200,164,90,0.45); animation: splashRing 2.6s ease-out infinite; }
-        #splashScreen .splash-logo-wrap::after { animation-delay: 1.3s; }
-        @keyframes splashRing { 0% { transform: scale(0.85); opacity: 0.9; } 100% { transform: scale(1.6); opacity: 0; } }
-        #splashScreen .splash-logo { width: 104px; height: 104px; border-radius: 50%; object-fit: cover; border: 1px solid var(--line-accent); box-shadow: 0 0 50px rgba(52,80,47,0.35); background: var(--surface); animation: splashLogoPop 1.1s var(--spring); position: relative; z-index: 2; }
-        @keyframes splashLogoPop { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: none; opacity: 1; } }
-        #splashScreen .splash-title { font-family: var(--font-display); font-weight: 400; font-size: 2.3rem; color: var(--cream); margin: 0; opacity: 0; animation: splashFadeUp 0.8s var(--ease) 0.45s forwards; letter-spacing: 0.5px; }
-        #splashScreen .splash-sub { font-size: 0.62rem; color: var(--caramel-2); font-weight: 700; letter-spacing: 3px; text-transform: uppercase; margin-top: -10px; opacity: 0; animation: splashFadeUp 0.8s var(--ease) 0.7s forwards; }
+        #splashScreen .splash-logo-wrap { position: relative; width: min(64vw, 260px); aspect-ratio: 1; display: flex; align-items: center; justify-content: center; }
+        #splashScreen .splash-logo-wrap::before, #splashScreen .splash-logo-wrap::after { content: ''; position: absolute; inset: 12%; border-radius: 50%; border: 1px solid rgba(243,235,221,0.32); animation: splashRing 2.8s ease-out infinite; }
+        #splashScreen .splash-logo-wrap::after { animation-delay: 1.4s; }
+        @keyframes splashRing { 0% { transform: scale(0.9); opacity: 0.9; } 100% { transform: scale(1.45); opacity: 0; } }
+        #splashScreen .splash-logo { position: relative; z-index: 2; width: 100%; height: 100%; object-fit: contain; border-radius: 0; animation: splashLogoIn 1.2s var(--ease) both; -webkit-mask-image: radial-gradient(circle, #000 62%, transparent 72%); mask-image: radial-gradient(circle, #000 62%, transparent 72%); }
+        @keyframes splashLogoIn { 0% { transform: scale(0.82); opacity: 0; filter: blur(6px); } 100% { transform: none; opacity: 1; filter: none; } }
+        #splashScreen .splash-sheen { position: absolute; inset: 0; z-index: 3; pointer-events: none; overflow: hidden; border-radius: 50%; -webkit-mask-image: radial-gradient(circle, #000 55%, transparent 70%); mask-image: radial-gradient(circle, #000 55%, transparent 70%); }
+        #splashScreen .splash-sheen::after { content: ''; position: absolute; top: -20%; left: -60%; width: 40%; height: 140%; background: linear-gradient(90deg, transparent, rgba(255,248,230,0.22), transparent); transform: rotate(18deg); animation: splashSheen 2.4s ease-in-out 0.9s infinite; }
+        @keyframes splashSheen { 0% { left: -60%; } 60%, 100% { left: 130%; } }
+        #splashScreen .splash-title { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+        #splashScreen .splash-sub { font-size: 0.62rem; color: #E3CC94; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; margin-top: -4px; opacity: 0; animation: splashFadeUp 0.8s var(--ease) 0.8s forwards; }
         @keyframes splashFadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
-        #splashScreen .splash-loader { margin-top: 14px; display: flex; gap: 7px; opacity: 0; animation: splashFadeUp 0.7s ease-out 0.95s forwards; }
-        #splashScreen .splash-loader span { width: 6px; height: 6px; border-radius: 50%; background: var(--caramel-2); animation: splashDot 1.3s ease-in-out infinite; }
+        #splashScreen .splash-loader { margin-top: 18px; display: flex; gap: 7px; opacity: 0; animation: splashFadeUp 0.7s ease-out 1.05s forwards; }
+        #splashScreen .splash-loader span { width: 6px; height: 6px; border-radius: 50%; background: #F3EBDD; animation: splashDot 1.3s ease-in-out infinite; }
         #splashScreen .splash-loader span:nth-child(2) { animation-delay: 0.18s; }
         #splashScreen .splash-loader span:nth-child(3) { animation-delay: 0.36s; }
         @keyframes splashDot { 0%, 100% { transform: translateY(0); opacity: 0.35; } 50% { transform: translateY(-7px); opacity: 1; } }
@@ -987,7 +995,8 @@
     <!-- ⭐ SPLASH SCREEN -->
     <div id="splashScreen">
         <div class="splash-logo-wrap">
-            <img src="logo.jpg" alt="Selagi Coffee Logo" class="splash-logo">
+            <img src="icons/splash-logo.png" alt="Selagi Coffee" class="splash-logo">
+            <span class="splash-sheen" aria-hidden="true"></span>
         </div>
         <h1 class="splash-title">Selagi Coffee</h1>
         <p class="splash-sub">Loyalty Reward & Tiers</p>
@@ -1711,98 +1720,9 @@
         var APP_NAME = 'Selagi Coffee';
         var APP_FULLNAME = 'Selagi Coffee - Kad Kesetiaan & Point';
         var APP_DESC = 'Kad kesetiaan digital Selagi Coffee — kumpul cap, kumpul point, tebus ganjaran eksklusif.';
-        var THEME_COLOR = '#FBF7F0';
-        var BG_COLOR = '#FBF7F0';
         var DISMISS_KEY = 'selagi_pwa_banner_dismissed';
 
-        var LOGO_URL = new URL('logo.jpg', location.href).href;
-
-        function rasterize(size, paddingRatio) {
-            return new Promise(function (resolve) {
-                try {
-                    var img = new Image();
-                    img.crossOrigin = 'anonymous';
-                    img.onload = function () {
-                        try {
-                            var c = document.createElement('canvas');
-                            c.width = size; c.height = size;
-                            var ctx = c.getContext('2d');
-                            ctx.fillStyle = '#FFFFFF';
-                            ctx.fillRect(0, 0, size, size);
-                            var r = Math.round(size * 0.22);
-                            ctx.save();
-                            ctx.beginPath();
-                            ctx.moveTo(r, 0);
-                            ctx.lineTo(size - r, 0);
-                            ctx.quadraticCurveTo(size, 0, size, r);
-                            ctx.lineTo(size, size - r);
-                            ctx.quadraticCurveTo(size, size, size - r, size);
-                            ctx.lineTo(r, size);
-                            ctx.quadraticCurveTo(0, size, 0, size - r);
-                            ctx.lineTo(0, r);
-                            ctx.quadraticCurveTo(0, 0, r, 0);
-                            ctx.closePath();
-                            ctx.clip();
-                            var pad = Math.round(size * (paddingRatio || 0));
-                            var d = size - pad * 2;
-                            ctx.drawImage(img, pad, pad, d, d);
-                            ctx.restore();
-                            resolve(c.toDataURL('image/png'));
-                        } catch (err) { resolve(''); }
-                    };
-                    img.onerror = function () { resolve(''); };
-                    img.src = LOGO_URL;
-                } catch (e) { resolve(''); }
-            });
-        }
-
-        function buildManifest(icons) {
-            var baseUrl = location.href.split('#')[0].split('?')[0];
-            var dirUrl = baseUrl.substring(0, baseUrl.lastIndexOf('/') + 1);
-            return { name: APP_FULLNAME, short_name: APP_NAME, description: APP_DESC, id: dirUrl, start_url: baseUrl, scope: dirUrl, display: 'standalone', display_override: ['standalone', 'fullscreen', 'minimal-ui'], orientation: 'portrait', background_color: BG_COLOR, theme_color: THEME_COLOR, lang: 'ms', dir: 'ltr', categories: ['food', 'lifestyle', 'shopping'], prefer_related_applications: false, icons: icons };
-        }
-
-        function injectManifest(icons) {
-            var old = document.querySelector('link[rel="manifest"]');
-            if (old) old.remove();
-            var json = JSON.stringify(buildManifest(icons));
-            var href;
-            try { href = URL.createObjectURL(new Blob([json], { type: 'application/manifest+json' })); }
-            catch (e) { href = 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(json); }
-            var link = document.createElement('link'); link.rel = 'manifest'; link.href = href;
-            document.head.appendChild(link);
-        }
-
-        function setIconLinks(png) {
-            if (!png) return;
-            var old = document.querySelectorAll('link[rel="apple-touch-icon"], link[rel="icon"]');
-            for (var i = 0; i < old.length; i++) old[i].remove();
-            var apple = document.createElement('link'); apple.rel = 'apple-touch-icon'; apple.sizes = '192x192'; apple.href = png;
-            document.head.appendChild(apple);
-            var fav = document.createElement('link'); fav.rel = 'icon'; fav.type = 'image/png'; fav.sizes = '192x192'; fav.href = png;
-            document.head.appendChild(fav);
-            var short = document.createElement('link'); short.rel = 'shortcut icon'; short.href = png;
-            document.head.appendChild(short);
-        }
-
-        function initManifest() {
-            injectManifest([{ src: LOGO_URL, sizes: '225x225', type: 'image/jpeg', purpose: 'any' }]);
-            Promise.all([rasterize(192, 0.08), rasterize(512, 0.08), rasterize(512, 0.22)]).then(function (r) {
-                var png192 = r[0], png512 = r[1], mask512 = r[2];
-                if (!png192 && !png512 && !mask512) {
-                    injectManifest([{ src: LOGO_URL, sizes: '225x225', type: 'image/jpeg', purpose: 'any' }]);
-                    return;
-                }
-                var icons = [];
-                if (png192) icons.push({ src: png192, sizes: '192x192', type: 'image/png', purpose: 'any' });
-                if (png512) icons.push({ src: png512, sizes: '512x512', type: 'image/png', purpose: 'any' });
-                if (mask512) icons.push({ src: mask512, sizes: '512x512', type: 'image/png', purpose: 'maskable' });
-                icons.push({ src: LOGO_URL, sizes: '225x225', type: 'image/jpeg', purpose: 'any' });
-                injectManifest(icons);
-                setIconLinks(png192 || png512);
-            }).catch(function () {});
-        }
-        initManifest();
+        /* Icons & manifest are static files: manifest.webmanifest + icons/ */
 
         if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {
             window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js', { scope: './' }).catch(function () {}); });
@@ -1941,6 +1861,7 @@
             var remaining = Math.max(0, SPLASH_MIN_MS - elapsed);
             setTimeout(function () {
                 splash.classList.add('hide');
+                var mt = document.getElementById('metaThemeColor'); if (mt) mt.setAttribute('content', '#FBF7F0');
                 setTimeout(function () { if (splash && splash.parentNode) splash.style.display = 'none'; }, 800);
             }, remaining);
         }
@@ -3835,7 +3756,7 @@
     };
 
     const VAPID_KEY = "BFpPcfdJSblmoF0592gPRSow2CfPuL46fXIYbncY0VkNlHRWjmYgIZQAKIEK1cMRtuBPcPQmM7im_XwFliezLg4";
-    const LOGO = new URL('logo.jpg', location.href).href;
+    const LOGO = new URL('icons/icon-192.png', location.href).href;
     const SW_URL = "./firebase-messaging-sw.js";
     const SW_SCOPE = "./firebase-cloud-messaging-push-scope";
     const TOKEN_KEY = "selagi_fcm_token";
